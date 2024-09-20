@@ -10,6 +10,7 @@ export default function Register({ setToken, setRegistered }: RegisterProps) {
     const [last_name, setLastName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [error, setError] = useState('')
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -21,7 +22,12 @@ export default function Register({ setToken, setRegistered }: RegisterProps) {
             body: JSON.stringify({ first_name, last_name, email, password })
         })
         const data = await response.json()
-        setToken(data.accessToken)
+        if (data) {
+            if (data.error) {
+                return setError(data.error)
+            }
+            setToken(data.accessToken)
+        }
     }
 
     return (
@@ -72,6 +78,11 @@ export default function Register({ setToken, setRegistered }: RegisterProps) {
                         onChange={e => setPassword(e.target.value)}
                     />
                 </div>
+                {error && (
+                    <div className="flex justify-center">
+                        <span className="bg-red-400 text-white px-4 py-1 w-full text-center rounded-md">{error}</span>
+                    </div>
+                )}
                 <button
                     type="submit"
                     className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

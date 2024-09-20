@@ -8,18 +8,25 @@ interface LoginProps {
 export default function Login({ setToken, setRegistered }: LoginProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) =>{
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const response = await fetch('http://localhost:9000/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-      })
-      const data = await response.json()
-    setToken(data.accessToken)
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email, password })
+    })
+    const data = await response.json()
+    if (data) {
+      if (data.error) {
+        return setError(data.error)
+      }
+      setToken(data.accessToken)
+    }
+
   }
 
   return (
@@ -48,13 +55,18 @@ export default function Login({ setToken, setRegistered }: LoginProps) {
             onChange={e => setPassword(e.target.value)}
           />
         </div>
+        {error && (
+          <div className="flex justify-center">
+            <span className="bg-red-400 text-white px-4 py-1 w-full text-center rounded-md">{error}</span>
+          </div>
+        )}
         <button
           type="submit"
           className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
           Login
         </button>
-        <p onClick={()=> setRegistered(false)} className='text-center cursor-pointer underline'>Create an account</p>
+        <p onClick={() => setRegistered(false)} className='text-center cursor-pointer underline'>Create an account</p>
       </form>
     </div>
   )
