@@ -2,9 +2,10 @@ import { useState } from 'react'
 
 interface LoginProps {
   setToken: (token: string) => void,
+  setRegistered: (registered: boolean) => void;
 }
 
-export default function Login({ setToken }: LoginProps) {
+export default function Login({ setToken, setRegistered }: LoginProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -22,9 +23,9 @@ export default function Login({ setToken }: LoginProps) {
   }
 
   return (
-    <>
-      <div>Login</div>
-      <form action="post" onSubmit={handleSubmit} className="space-y-4 w-1/2">
+    <div className='flex flex-col items-center p-5'>
+      <h1>Login</h1>
+      <form action="post" onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email:</label>
           <input
@@ -53,7 +54,8 @@ export default function Login({ setToken }: LoginProps) {
         >
           Login
         </button>
+        <p onClick={()=> setRegistered(false)} className='text-center cursor-pointer underline'>Create an account</p>
       </form>
-    </>
+    </div>
   )
 }
