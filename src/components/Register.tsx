@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Navbar from "./Navbar";
 
 interface RegisterProps {
     setToken: (token: string) => void,
@@ -32,6 +33,7 @@ export default function Register({ setToken, setRegistered }: RegisterProps) {
 
     return (
         <div className='flex flex-col items-center p-5'>
+            <Navbar />
             <h1>Register</h1>
             <form action="post" onSubmit={handleSubmit} className="space-y-4">
                 <div>

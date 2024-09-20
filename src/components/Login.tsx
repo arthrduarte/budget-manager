@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Navbar from './Navbar';
 
 interface LoginProps {
   setToken: (token: string) => void,
@@ -31,6 +32,7 @@ export default function Login({ setToken, setRegistered }: LoginProps) {
 
   return (
     <div className='flex flex-col items-center p-5'>
+      <Navbar/>
       <h1>Login</h1>
       <form action="post" onSubmit={handleSubmit} className="space-y-4">
         <div>
