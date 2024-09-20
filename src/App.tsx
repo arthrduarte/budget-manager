@@ -1,10 +1,17 @@
 import './App.css'
+import Login from './components/Login'
+import useToken from './hooks/useToken';
 
 function App() {
+  const { token, setToken } = useToken()
+
+  if (!token) {
+    return <Login setToken={setToken} />
+  }
 
   return (
     <>
-      <h1>Hello, World!</h1>
+      <h1>Dashboard</h1>
     </>
   )
 }
