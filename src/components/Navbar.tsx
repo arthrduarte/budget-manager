@@ -9,6 +9,7 @@ interface UserData {
 export default function Navbar() {
     const { token } = useToken()
     const [data, setData] = useState<UserData[] | null>(null)
+    const [logout, setLogout] = useState(false)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -26,10 +27,21 @@ export default function Navbar() {
         fetchData()
     }, [])
 
+    useEffect(()=>{
+        if(logout){
+            localStorage.removeItem('token');
+            setLogout(false)
+            window.location.reload();
+        }
+    }, [logout])
+
     return (
         <div className='flex flex-row justify-between w-full'>
             <h1>💸 Budget Tracker</h1>
-            <h1>{data && data[0].first_name}</h1>
+            <div>
+                <p>{data && data[0].first_name}</p>
+                {token && <p onClick={() => setLogout(true)}>Logout</p>}
+            </div>
         </div>
     )
 }
