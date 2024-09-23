@@ -25,7 +25,7 @@ export default function AddEntry({ type, date }: AddEntryProps) {
     const [name, setName] = useState('')
     const [amount, setAmount] = useState('')
     const [expenseCategory, setExpenseCategory] = useState('')
-    const [category_id, setCategoryId] = useState('') // Add this line
+    const [category_id, setCategoryId] = useState('')
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -44,7 +44,7 @@ export default function AddEntry({ type, date }: AddEntryProps) {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const response = await fetch('http://localhost:9000/expense', {
+        const response = await fetch('http://localhost:9000/' + type, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -52,7 +52,6 @@ export default function AddEntry({ type, date }: AddEntryProps) {
             },
             body: JSON.stringify({ name, amount, date, category_id })
         })
-        const data = await response.json()
     }
 
     return (
