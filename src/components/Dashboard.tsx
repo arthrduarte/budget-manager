@@ -16,7 +16,7 @@ export default function Dashboard() {
     const monthIndex = months.indexOf(month) + 1;
     const formattedMonth = monthIndex < 10 ? `0${monthIndex}` : monthIndex;
     setDisplayDate(`${year}-${formattedMonth}`);
-  }, [month, year])
+  }, [month])
 
   function datePicker(action: string) {
     const currentMonthIndex = months.indexOf(month);
@@ -52,7 +52,7 @@ export default function Dashboard() {
         </div>
         <div className='flex flex-col lg:flex-row'>
             <Expenses date={displayDate} />
-            <Income date={displayDate} />
+            {/* <Income date={displayDate} /> */}
         </div>
       </div>
     </>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import useToken from '../hooks/useToken'
+import AddEntry from './AddEntry'
 
 interface ExpensesProps {
     date: string,
@@ -13,11 +14,10 @@ interface Expense {
 
 export default function Expenses({ date }: ExpensesProps) {
     const { token } = useToken()
-    const [data, setData] = useState<Expense[]>([])
+    const [expenses, setExpenses] = useState<Expense[]>([])
 
     useEffect(() => {
-        console.log(date)
-        const fetchData = async () => {
+        const fetchExpenses = async () => {
             const response = await fetch('http://localhost:9000/expense/' + date, {
                 method: 'GET',
                 headers: {
@@ -26,10 +26,9 @@ export default function Expenses({ date }: ExpensesProps) {
                 }
             })
             const data: Expense[] = await response.json()
-            setData(data)
+            setExpenses(data)
         }
-
-        fetchData()
+        fetchExpenses()
     }, [date])
 
     return (
@@ -43,11 +42,12 @@ export default function Expenses({ date }: ExpensesProps) {
                     <p>Amount</p>
                     <p>Category</p>
                 </div>
-                {data.map((expense, index) => (
+                <AddEntry type="expense" date={date}/>
+                {expenses.map((expense, index) => (
                     <div className='grid grid-cols-4 text-sm' key={index}>
                         <p>{expense.name}</p>
                         <p>{expense.amount}</p>
-                        <p>{expense.category_name}</p>
+                        <p>{expense.category_name || 'No Category'}</p>
                         <div className='flex flex-row'>
                             <div className='w-1/2'>
                                 <input type="button" value={`Edit`} />
