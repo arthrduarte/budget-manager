@@ -52,7 +52,7 @@ export default function Dashboard() {
         </div>
         <div className='flex flex-col lg:flex-row'>
             <Expenses date={displayDate} />
-            {/* <Income date={displayDate} /> */}
+            <Income date={displayDate} />
         </div>
       </div>
     </>
