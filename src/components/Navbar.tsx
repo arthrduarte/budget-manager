@@ -25,7 +25,7 @@ export default function Navbar() {
         }
 
         fetchData()
-    }, [])
+    }, [token])
 
     useEffect(()=>{
         if(logout){
