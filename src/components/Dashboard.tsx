@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from './Navbar'
 import Expenses from './Expenses'
+import Income from './Income'
 
 export default function Dashboard() {
   const [displayDate, setDisplayDate] = useState('')
@@ -39,16 +40,19 @@ export default function Dashboard() {
     <>
       <Navbar />
       <div>
-        <div className='flex space-x-4'>
-          <p onClick={() => datePicker('decrease')}>&lt;</p>
-          <h3>{displayDate}</h3>
-          <p onClick={()=> datePicker('increase')}>&gt;</p>
-        </div>
         <div>
-          <Expenses date={displayDate}/>
+          <div>
+            <h3>{year}</h3>
+          </div>
+          <div className='flex space-x-4'>
+            <p onClick={() => datePicker('decrease')}>&lt;</p>
+            <h3>{month}</h3>
+            <p onClick={() => datePicker('increase')}>&gt;</p>
+          </div>
         </div>
-        <div>
-
+        <div className='flex flex-col lg:flex-row'>
+            <Expenses date={displayDate} />
+            <Income date={displayDate} />
         </div>
       </div>
     </>
