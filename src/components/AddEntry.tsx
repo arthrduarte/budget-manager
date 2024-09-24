@@ -38,37 +38,45 @@ export default function AddEntry({ type, date, fetchData, categories }: AddEntry
 
     return (
         <form onSubmit={handleSubmit}>
-            <div className='grid grid-cols-4 gap-2 py-1 text-sm'>
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Name"
-                    className="p-1 border rounded"
-                    onChange={e => setName(e.target.value)}
-                />
-                <input
-                    type="text"
-                    name="amount"
-                    placeholder="Amount"
-                    className="p-1 border rounded"
-                    onChange={e => setAmount(e.target.value)}
-                />
-                <select
-                    name="category"
-                    className="p-1 border rounded"
-                    onChange={e => setCategoryId(e.target.value)}
-                >
-                    <option value="">Select Category</option>
-                    {categories.map((category) => (
-                        <option key={category.id} value={category.id}>{category.name}</option>
-                    ))}
-                </select>
-                <button
-                    type="submit"
-                    className="p-1 bg-blue-500 text-white rounded"
-                >
-                    Add
-                </button>
+            <div className='flex flex-row py-1 text-sm'>
+                <div className="w-1/4 mx-1">
+                    <input
+                        type="text"
+                        name="name"
+                        placeholder="Name"
+                        className="p-1 border rounded w-full"
+                        onChange={e => setName(e.target.value)}
+                    />
+                </div>
+                <div className="w-1/4 mx-1">
+                    <input
+                        type="text"
+                        name="amount"
+                        placeholder="Amount"
+                        className="p-1 border rounded w-full"
+                        onChange={e => setAmount(e.target.value)}
+                    />
+                </div>
+                <div className="w-1/4 mx-1">
+                    <select
+                        name="category"
+                        className="p-1 border rounded w-full"
+                        onChange={e => setCategoryId(e.target.value)}
+                    >
+                        <option value="">Select Category</option>
+                        {categories.map((category) => (
+                            <option key={category.id} value={category.id}>{category.name}</option>
+                        ))}
+                    </select>
+                </div>
+                <div className="w-1/4 mx-1">
+                    <button
+                        type="submit"
+                        className="p-1 bg-blue-500 text-white rounded w-full"
+                    >
+                        Add
+                    </button>
+                </div>
             </div>
         </form>
     )

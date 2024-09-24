@@ -72,15 +72,21 @@ export default function Entries({ date, typeOfEntry }: EntriesProps) {
     }, [date, edit])
 
     return (
-        <div className='lg:w-1/2 lg:mx-5 shadow-xl'>
-            <div className='px-5'>
-                <h1>Expenses</h1>
+        <div className='lg:w-1/2 lg:mx-5 mt-5'>
+            <div className='text-center mb-1'>
+                <h1 className='font-semibold text-lg'>{typeOfEntry.charAt(0).toUpperCase() + typeOfEntry.slice(1)}</h1>
             </div>
-            <div>
-                <div className='grid grid-cols-4 bg-gray-300'>
-                    <p>Name</p>
-                    <p>Amount</p>
-                    <p>Category</p>
+            <div className='shadow-xl rounded-xl'>
+                <div className='flex flex-row py-1 bg-gray-300'>
+                    <div className='w-1/4 text-center'>
+                        <p>Name</p>
+                    </div>
+                    <div className='w-1/4 text-center'>
+                        <p>Amount</p>
+                    </div>
+                    <div className='w-1/4 text-center'>
+                        <p>Category</p>
+                    </div>
                 </div>
                 <AddEntry type={`${typeOfEntry}`} date={date} fetchData={fetchEntries} categories={categories} />
                 {entries.map((entry, index) => (
@@ -88,16 +94,22 @@ export default function Entries({ date, typeOfEntry }: EntriesProps) {
                         {edit && edit == `${entry.id}` ? (
                             <EditEntry type="expense" date={date} fetchData={fetchEntries} entry={entry} categories={categories} setEdit={setEdit} />
                         ) : (
-                            <div className='grid grid-cols-4 text-sm py-1' key={index}>
-                                <p>{entry.name}</p>
-                                <p>{entry.amount}</p>
-                                <p>{entry.category_name || 'No Category'}</p>
-                                <div className='flex flex-row'>
-                                    <div className='w-1/2'>
-                                        <input type="button" value={`Edit`} onClick={() => setEdit(`${entry.id}`)} className='cursor-pointer' />
+                            <div className='flex flex-row text-sm py-1' key={index}>
+                                <div className='w-1/4 text-center mx-1'>
+                                    <p>{entry.name}</p>
+                                </div>
+                                <div className='w-1/4 text-center mx-1'>
+                                    <p>{entry.amount}</p>
+                                </div>
+                                <div className='w-1/4 text-center mx-1'>
+                                    <p>{entry.category_name || 'No Category'}</p>
+                                </div>
+                                <div className='flex flex-row justify-end w-1/4 mx-1'>
+                                    <div className='w-1/4 text-center my-auto'>
+                                        <input type="button" value='✏️' onClick={() => setEdit(`${entry.id}`)} className='cursor-pointer' />
                                     </div>
-                                    <div className='w-1/2'>
-                                        <input type="button" value={`Delete`} onClick={() => deleteEntry(entry.id)} className='cursor-pointer' />
+                                    <div className='w-1/4 text-center my-auto'>
+                                        <input type="button" value='🗑️' onClick={() => deleteEntry(entry.id)} className='cursor-pointer' />
                                     </div>
                                 </div>
                             </div>

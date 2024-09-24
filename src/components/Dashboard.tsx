@@ -39,11 +39,11 @@ export default function Dashboard() {
     <>
       <Navbar />
       <div>
-        <div>
+        <div className='flex flex-col items-center'>
           <div>
-            <h3>{year}</h3>
+            <h3 className='font-bold text-lg'>{year}</h3>
           </div>
-          <div className='flex space-x-4'>
+          <div className='flex space-x-4 font-bold text-lg'>
             <p onClick={() => datePicker('decrease')}>&lt;</p>
             <h3>{month}</h3>
             <p onClick={() => datePicker('increase')}>&gt;</p>
