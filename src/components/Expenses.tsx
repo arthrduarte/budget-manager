@@ -58,7 +58,7 @@ export default function Expenses({ date }: ExpensesProps) {
                     <p>Amount</p>
                     <p>Category</p>
                 </div>
-                <AddEntry type="expense" date={date} />
+                <AddEntry type="expense" date={date} fetchData={fetchExpenses}/>
                 {expenses.map((expense, index) => (
                     <div className='grid grid-cols-4 text-sm' key={index}>
                         <p>{expense.name}</p>

@@ -17,14 +17,14 @@ interface Category {
 interface AddEntryProps {
     type: string,
     date: string,
+    fetchData: () => void;
 }
 
-export default function AddEntry({ type, date }: AddEntryProps) {
+export default function AddEntry({ type, date, fetchData }: AddEntryProps) {
     const { token } = useToken()
     const [categories, setCategories] = useState<Category[]>([])
     const [name, setName] = useState('')
     const [amount, setAmount] = useState('')
-    const [expenseCategory, setExpenseCategory] = useState('')
     const [category_id, setCategoryId] = useState('')
 
     useEffect(() => {
@@ -52,6 +52,9 @@ export default function AddEntry({ type, date }: AddEntryProps) {
             },
             body: JSON.stringify({ name, amount, date, category_id })
         })
+        if (response.ok) {
+            fetchData();
+        }
     }
 
     return (
