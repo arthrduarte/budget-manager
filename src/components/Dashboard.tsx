@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Navbar from './Navbar'
-import Expenses from './Expenses'
-import Income from './Income'
+import Entries from './Entries'
 
 export default function Dashboard() {
   const [displayDate, setDisplayDate] = useState('')
@@ -51,8 +50,10 @@ export default function Dashboard() {
           </div>
         </div>
         <div className='flex flex-col lg:flex-row'>
-            <Expenses date={displayDate} />
-            <Income date={displayDate} />
+            <Entries date={displayDate} typeOfEntry='expense'/>
+            <Entries date={displayDate} typeOfEntry='income'/>
+            {/* <Expenses date={displayDate} />
+            <Income date={displayDate} /> */}
         </div>
       </div>
     </>

@@ -1,52 +1,54 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import useToken from '../hooks/useToken'
 import AddEntry from './AddEntry'
 import EditEntry from './EditEntry';
 
-interface ExpensesProps {
+interface EntriesProps {
     date: string,
+    typeOfEntry: string
 }
 
-interface Expense {
+interface Entry {
     id: number,
     name: string;
     amount: number;
     category_name: string;
 }
 
-export default function Expenses({ date }: ExpensesProps) {
+export default function Entries({ date, typeOfEntry }: EntriesProps) {
     const { token } = useToken()
-    const [expenses, setExpenses] = useState<Expense[]>([])
+    const [entries, setEntries] = useState<Entry[]>([])
     const [edit, setEdit] = useState('')
 
-    const fetchExpenses = async () => {
-        const response = await fetch('http://localhost:9000/expense/' + date, {
+    const fetchEntries = async () => {
+        const response = await fetch(`http://localhost:9000/${typeOfEntry}/` + date, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             }
         })
-        const data: Expense[] = await response.json()
-        setExpenses(data)
+        const data: Entry[] = await response.json()
+        setEntries(data)
     }
 
-    const deleteEntry = async (expense_id: number) => {
-        const response = await fetch('http://localhost:9000/expense/', {
+    const deleteEntry = async (entry_id: number) => {
+        const body = typeOfEntry === 'income' ? { income_id: entry_id } : { expense_id: entry_id };
+        const response = await fetch(`http://localhost:9000/${typeOfEntry}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ expense_id })
+            body: JSON.stringify(body)
         });
         if (response.ok) {
-            fetchExpenses();
+            fetchEntries();
         }
     }
 
     useEffect(() => {
-        fetchExpenses()
+        fetchEntries()
     }, [date, edit])
 
 
@@ -61,22 +63,22 @@ export default function Expenses({ date }: ExpensesProps) {
                     <p>Amount</p>
                     <p>Category</p>
                 </div>
-                <AddEntry type="expense" date={date} fetchData={fetchExpenses} />
-                {expenses.map((expense, index) => (
+                <AddEntry type={`${typeOfEntry}`} date={date} fetchData={fetchEntries} />
+                {entries.map((entry, index) => (
                     <>
-                        {edit && edit == `${expense.id}` ? (
-                            <EditEntry type="expense" date={date} fetchData={fetchExpenses} />
+                        {edit && edit == `${entry.id}` ? (
+                            <EditEntry type="expense" date={date} fetchData={fetchEntries} />
                         ) : (
                             <div className='grid grid-cols-4 text-sm' key={index}>
-                                <p>{expense.name}</p>
-                                <p>{expense.amount}</p>
-                                <p>{expense.category_name || 'No Category'}</p>
+                                <p>{entry.name}</p>
+                                <p>{entry.amount}</p>
+                                <p>{entry.category_name || 'No Category'}</p>
                                 <div className='flex flex-row'>
                                     <div className='w-1/2'>
-                                        <input type="button" value={`Edit`} onClick={() => setEdit(`${expense.id}`)} />
+                                        <input type="button" value={`Edit`} onClick={() => setEdit(`${entry.id}`)} />
                                     </div>
                                     <div className='w-1/2'>
-                                        <input type="button" value={`Delete`} onClick={() => deleteEntry(expense.id)} className='cursor-pointer' />
+                                        <input type="button" value={`Delete`} onClick={() => deleteEntry(entry.id)} className='cursor-pointer' />
                                     </div>
                                 </div>
                             </div>
