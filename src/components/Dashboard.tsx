@@ -52,8 +52,6 @@ export default function Dashboard() {
         <div className='flex flex-col lg:flex-row'>
             <Entries date={displayDate} typeOfEntry='expense'/>
             <Entries date={displayDate} typeOfEntry='income'/>
-            {/* <Expenses date={displayDate} />
-            <Income date={displayDate} /> */}
         </div>
       </div>
     </>

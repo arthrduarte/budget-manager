@@ -11,29 +11,15 @@ interface AddEntryProps {
     type: string,
     date: string,
     fetchData: () => void;
+    categories: Category[]
 }
 
-export default function AddEntry({ type, date, fetchData }: AddEntryProps) {
+export default function AddEntry({ type, date, fetchData, categories }: AddEntryProps) {
     const { token } = useToken()
-    const [categories, setCategories] = useState<Category[]>([])
+    // const [categories, setCategories] = useState<Category[]>([])
     const [name, setName] = useState('')
     const [amount, setAmount] = useState('')
     const [category_id, setCategoryId] = useState('')
-
-    useEffect(() => {
-        const fetchCategories = async () => {
-            const response = await fetch('http://localhost:9000/category/' + type, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            const data: Category[] = await response.json()
-            setCategories(data)
-        }
-        fetchCategories()
-    }, [])
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -52,7 +38,7 @@ export default function AddEntry({ type, date, fetchData }: AddEntryProps) {
 
     return (
         <form onSubmit={handleSubmit}>
-            <div className='grid grid-cols-4 bg-gray-300 gap-2'>
+            <div className='grid grid-cols-4 gap-2 py-1 text-sm'>
                 <input
                     type="text"
                     name="name"
