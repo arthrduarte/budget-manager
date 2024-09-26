@@ -13,6 +13,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { Input } from './ui/input';
 
 interface Category {
     id: number;
@@ -31,10 +32,11 @@ interface EditEntryProps {
     categories: Category[]
     date: string,
     fetchData: () => void,
-    setEdit: (edit: string) => void
+    setEdit: (edit: string) => void,
+    fetchCategories: () => void
 }
 
-export default function EditEntry({ entry, type, categories, date, fetchData, setEdit }: EditEntryProps) {
+export default function EditEntry({ entry, type, categories, date, fetchData, setEdit, fetchCategories }: EditEntryProps) {
     const { token } = useToken()
     // const [categories, setCategories] = useState<Category[]>([])
     const [name, setName] = useState(entry.name)
@@ -59,13 +61,13 @@ export default function EditEntry({ entry, type, categories, date, fetchData, se
 
     return (
         <div className='flex flex-row text-sm'>
-            <input
+            <Input
                 type="hidden"
                 name="entry_id"
                 value={entry.id}
             />
             <div className="w-1/4 mx-1">
-                <input
+                <Input
                     type="text"
                     name="name"
                     value={name}
@@ -74,7 +76,7 @@ export default function EditEntry({ entry, type, categories, date, fetchData, se
                 />
             </div>
             <div className="w-1/4 mx-1">
-                <input
+                <Input
                     type="text"
                     name="amount"
                     value={amount}
@@ -82,13 +84,13 @@ export default function EditEntry({ entry, type, categories, date, fetchData, se
                     onChange={e => setAmount(Number(e.target.value))}
                 />
             </div>
-            <CategoryDropdown setCategoryId={setCategoryId} categories={categories} category_id={category_id}/>
-   
+            <CategoryDropdown setCategoryId={setCategoryId} categories={categories} category_id={category_id} type={type} fetchCategories={fetchCategories} />
+
             <div className='flex flex-row justify-end w-1/4 mx-1'>
                 <div className='w-1/4 text-center my-auto'>
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
-                            <input type="button" value='✅' className='cursor-pointer' />
+                            <Input type="button" value='✅' className='cursor-pointer' />
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                             <AlertDialogHeader>
@@ -105,7 +107,7 @@ export default function EditEntry({ entry, type, categories, date, fetchData, se
                     </AlertDialog>
                 </div>
                 <div className='w-1/4 text-center my-auto'>
-                    <input type="button" value='❌' onClick={() => setEdit('')} className='cursor-pointer' />
+                    <Input type="button" value='❌' onClick={() => setEdit('')} className='cursor-pointer' />
                 </div>
             </div>
         </div>

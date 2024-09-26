@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import useToken from '../hooks/useToken'
 import CategoryDropdown from './CategoryDropdown';
 import { Button } from './ui/button';
+import { Input } from "@/components/ui/input"
 
 interface Category {
     id: number;
@@ -13,10 +14,11 @@ interface AddEntryProps {
     type: string,
     date: string,
     fetchData: () => void;
-    categories: Category[]
+    categories: Category[],
+    fetchCategories: () => void,
 }
 
-export default function AddEntry({ type, date, fetchData, categories }: AddEntryProps) {
+export default function AddEntry({ type, date, fetchData, categories, fetchCategories }: AddEntryProps) {
     const { token } = useToken()
     const [name, setName] = useState('')
     const [amount, setAmount] = useState('')
@@ -42,7 +44,7 @@ export default function AddEntry({ type, date, fetchData, categories }: AddEntry
     return (
         <div className='flex flex-row py-1 text-sm h-[2rem]'>
             <div className="w-1/4 mx-1">
-                <input
+                <Input
                     type="text"
                     name="name"
                     placeholder="Name"
@@ -52,7 +54,7 @@ export default function AddEntry({ type, date, fetchData, categories }: AddEntry
                 />
             </div>
             <div className="w-1/4 mx-1">
-                <input
+                <Input
                     type="text"
                     name="amount"
                     placeholder="Amount"
@@ -61,10 +63,9 @@ export default function AddEntry({ type, date, fetchData, categories }: AddEntry
                     onChange={e => setAmount(e.target.value)}
                 />
             </div>
-            <CategoryDropdown category_id={category_id} setCategoryId={setCategoryId} categories={categories} />
+            <CategoryDropdown category_id={category_id} setCategoryId={setCategoryId} categories={categories} type={type} fetchCategories={fetchCategories} />
             <div className="w-1/4 mx-1">
-                <Button onClick={handleSubmit} className='bg-blue-500 w-full h-full'>Add</Button>
-          
+                <Button onClick={handleSubmit} className='bg-blue-500 hover:bg-blue-400 w-full h-full'>Add</Button>
             </div>
         </div>
     )

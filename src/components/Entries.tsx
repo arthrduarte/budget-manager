@@ -100,11 +100,11 @@ export default function Entries({ date, typeOfEntry }: EntriesProps) {
                         <p>Category</p>
                     </div>
                 </div>
-                <AddEntry type={`${typeOfEntry}`} date={date} fetchData={fetchEntries} categories={categories} />
+                <AddEntry type={`${typeOfEntry}`} date={date} fetchData={fetchEntries} categories={categories} fetchCategories={fetchCategories} />
                 {entries.map((entry, index) => (
                     <>
                         {edit && edit == `${entry.id}` ? (
-                            <EditEntry type="expense" date={date} fetchData={fetchEntries} entry={entry} categories={categories} setEdit={setEdit} />
+                            <EditEntry type="expense" date={date} fetchData={fetchEntries} entry={entry} categories={categories} setEdit={setEdit} fetchCategories={fetchCategories} />
                         ) : (
                             <div className='flex flex-row text-sm py-1' key={index}>
                                 <div className='w-1/4 text-center mx-1'>

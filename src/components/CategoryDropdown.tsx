@@ -8,6 +8,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from './ui/button';
+import useToken from '@/hooks/useToken';
 
 
 interface Category {
@@ -19,17 +20,43 @@ interface Category {
 interface CategoryDropdownProps {
     setCategoryId: (id: string) => void,
     category_id: string,
-    categories: Category[]
+    categories: Category[],
+    type: string,
+    fetchCategories: () => void
 }
 
-export default function CategoryDropdown({ setCategoryId, categories, category_id }: CategoryDropdownProps) {
+export default function CategoryDropdown({ setCategoryId, categories, category_id, type, fetchCategories }: CategoryDropdownProps) {
+    const { token } = useToken()
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(
         categories.find(category => category.id.toString() === category_id) || null
     );
+    const [isCreating, setIsCreating] = useState(false)
+    const [newCategory, setNewCategory] = useState('')
 
     const handleCategorySelect = (category: Category) => {
         setSelectedCategory(category);
         setCategoryId(category.id.toString());
+    };
+
+    const handleCreateCategory = async () => {
+        if (newCategory.trim() === '') return;
+
+        const response = await fetch('http://localhost:9000/category', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ name: newCategory, type }),
+        });
+
+        if (response.ok) {
+            setNewCategory('');
+            setIsCreating(false);
+            fetchCategories(); // Refetch the updated list of categories
+        } else {
+            console.error('Failed to create category');
+        }
     };
 
 
@@ -37,11 +64,30 @@ export default function CategoryDropdown({ setCategoryId, categories, category_i
         <div className="w-1/4 mx-1 h-full">
             <DropdownMenu>
                 <DropdownMenuTrigger className='w-full h-full'>
-                    <Button className='w-full h-full'>
+                    <Button className='bg-white hover:bg-slate-100 text-black font-normal w-full h-full'>
                         {selectedCategory ? selectedCategory.name : "Select Category"}
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
+                    <DropdownMenuItem className="mt-2">
+                        <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
+                            <div className="flex items-center space-x-2">
+                                <input
+                                    type="text"
+                                    className="p-1 border rounded"
+                                    value={newCategory}
+                                    onChange={(e) => setNewCategory(e.target.value)}
+                                    placeholder={`New ${type}`}
+                                />
+                                <Button
+                                    className="bg-green-500 text-white p-1 rounded"
+                                    onClick={handleCreateCategory}
+                                >
+                                    Create
+                                </Button>
+                            </div>
+                        </div>
+                    </DropdownMenuItem>
                     {categories.map((category) => (
                         <DropdownMenuItem
                             key={category.id}
