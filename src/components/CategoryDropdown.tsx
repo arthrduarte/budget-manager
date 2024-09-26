@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Button } from './ui/button';
 import useToken from '@/hooks/useToken';
+import { Input } from './ui/input';
 
 
 interface Category {
@@ -30,8 +31,8 @@ export default function CategoryDropdown({ setCategoryId, categories, category_i
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(
         categories.find(category => category.id.toString() === category_id) || null
     );
-    const [isCreating, setIsCreating] = useState(false)
     const [newCategory, setNewCategory] = useState('')
+    const [error, setError] = useState('');
 
     const handleCategorySelect = (category: Category) => {
         setSelectedCategory(category);
@@ -39,7 +40,10 @@ export default function CategoryDropdown({ setCategoryId, categories, category_i
     };
 
     const handleCreateCategory = async () => {
-        if (newCategory.trim() === '') return;
+        if (newCategory.trim() === '') {
+            setError("New category can't be empty")
+            return
+        }
 
         const response = await fetch('http://localhost:9000/category', {
             method: 'POST',
@@ -52,8 +56,8 @@ export default function CategoryDropdown({ setCategoryId, categories, category_i
 
         if (response.ok) {
             setNewCategory('');
-            setIsCreating(false);
-            fetchCategories(); // Refetch the updated list of categories
+            setError('')
+            fetchCategories();
         } else {
             console.error('Failed to create category');
         }
@@ -72,7 +76,7 @@ export default function CategoryDropdown({ setCategoryId, categories, category_i
                     <DropdownMenuItem className="mt-2">
                         <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
                             <div className="flex items-center space-x-2">
-                                <input
+                                <Input
                                     type="text"
                                     className="p-1 border rounded"
                                     value={newCategory}
@@ -88,6 +92,9 @@ export default function CategoryDropdown({ setCategoryId, categories, category_i
                             </div>
                         </div>
                     </DropdownMenuItem>
+                    {error &&
+                        <DropdownMenuItem disabled>{error}</DropdownMenuItem>
+                    }
                     {categories.map((category) => (
                         <DropdownMenuItem
                             key={category.id}
@@ -99,17 +106,5 @@ export default function CategoryDropdown({ setCategoryId, categories, category_i
                 </DropdownMenuContent>
             </DropdownMenu>
         </div>
-        // <div className="w-1/4 mx-1">
-        //     <select
-        //         name="category"
-        //         className="p-1 border rounded w-full"
-        //         onChange={e => setCategoryId(e.target.value)}
-        //     >
-        //         <option value="" disabled selected>Select Category</option>
-        //         {categories.map((category) => (
-        //             <option key={category.id} value={category.id}>{category.name}</option>
-        //         ))}
-        //     </select>
-        // </div>
     )
 }
