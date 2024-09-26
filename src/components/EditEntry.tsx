@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import useToken from '../hooks/useToken'
+import CategoryDropdown from './CategoryDropdown';
+
 import {
     AlertDialog,
     AlertDialogAction,
@@ -38,14 +40,6 @@ export default function EditEntry({ entry, type, categories, date, fetchData, se
     const [name, setName] = useState(entry.name)
     const [amount, setAmount] = useState(entry.amount)
     const [category_id, setCategoryId] = useState('')
-
-    useEffect(() => {
-        // Find the category that matches the entry's category name
-        const matchingCategory = categories.find(category => category.name === entry.category_name);
-        if (matchingCategory) {
-            setCategoryId(matchingCategory.id.toString());
-        }
-    }, [entry, categories]);
 
     const editEntry = async () => {
         console.log(name, amount, date, category_id, entry.id)
@@ -88,18 +82,8 @@ export default function EditEntry({ entry, type, categories, date, fetchData, se
                     onChange={e => setAmount(Number(e.target.value))}
                 />
             </div>
-            <div className="w-1/4 mx-1">
-                <select
-                    name="category"
-                    className="p-1 border rounded w-full"
-                    onChange={e => setCategoryId(e.target.value)}
-                >
-                    <option value="" disabled>Select Category</option>
-                    {categories.map((category) => (
-                        <option key={category.id} value={category.id} selected={entry.category_name === category.name}>{category.name}</option>
-                    ))}
-                </select>
-            </div>
+            <CategoryDropdown setCategoryId={setCategoryId} categories={categories} category_id={category_id}/>
+   
             <div className='flex flex-row justify-end w-1/4 mx-1'>
                 <div className='w-1/4 text-center my-auto'>
                     <AlertDialog>
