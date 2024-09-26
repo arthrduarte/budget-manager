@@ -1,5 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import useToken from '../hooks/useToken'
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 interface Category {
     id: number;
@@ -24,13 +35,20 @@ interface EditEntryProps {
 export default function EditEntry({ entry, type, categories, date, fetchData, setEdit }: EditEntryProps) {
     const { token } = useToken()
     // const [categories, setCategories] = useState<Category[]>([])
-    const [name, setName] = useState('')
-    const [amount, setAmount] = useState('')
+    const [name, setName] = useState(entry.name)
+    const [amount, setAmount] = useState(entry.amount)
     const [category_id, setCategoryId] = useState('')
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    useEffect(() => {
+        // Find the category that matches the entry's category name
+        const matchingCategory = categories.find(category => category.name === entry.category_name);
+        if (matchingCategory) {
+            setCategoryId(matchingCategory.id.toString());
+        }
+    }, [entry, categories]);
+
+    const editEntry = async () => {
         console.log(name, amount, date, category_id, entry.id)
-        e.preventDefault()
         const response = await fetch('http://localhost:9000/' + type, {
             method: 'PUT',
             headers: {
@@ -46,52 +64,66 @@ export default function EditEntry({ entry, type, categories, date, fetchData, se
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div className='flex flex-row text-sm'>
+        <div className='flex flex-row text-sm'>
+            <input
+                type="hidden"
+                name="entry_id"
+                value={entry.id}
+            />
+            <div className="w-1/4 mx-1">
                 <input
-                    type="hidden"
-                    name="entry_id"
-                    value={entry.id}
+                    type="text"
+                    name="name"
+                    value={name}
+                    className="p-1 border rounded w-full"
+                    onChange={e => setName(e.target.value)}
                 />
-                <div className="w-1/4 mx-1">
-                    <input
-                        type="text"
-                        name="name"
-                        placeholder={entry.name}
-                        className="p-1 border rounded w-full"
-                        onChange={e => setName(e.target.value)}
-                    />
+            </div>
+            <div className="w-1/4 mx-1">
+                <input
+                    type="text"
+                    name="amount"
+                    value={amount}
+                    className="p-1 border rounded w-full"
+                    onChange={e => setAmount(Number(e.target.value))}
+                />
+            </div>
+            <div className="w-1/4 mx-1">
+                <select
+                    name="category"
+                    className="p-1 border rounded w-full"
+                    onChange={e => setCategoryId(e.target.value)}
+                >
+                    <option value="" disabled>Select Category</option>
+                    {categories.map((category) => (
+                        <option key={category.id} value={category.id} selected={entry.category_name === category.name}>{category.name}</option>
+                    ))}
+                </select>
+            </div>
+            <div className='flex flex-row justify-end w-1/4 mx-1'>
+                <div className='w-1/4 text-center my-auto'>
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <input type="button" value='✅' className='cursor-pointer' />
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Are you sure you want to edit?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    This action is permanent.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction className='bg-blue-500 hover:bg-blue-600' onClick={editEntry} >Continue</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
                 </div>
-                <div className="w-1/4 mx-1">
-                    <input
-                        type="text"
-                        name="amount"
-                        placeholder={`${entry.amount}`}
-                        className="p-1 border rounded w-full"
-                        onChange={e => setAmount(e.target.value)}
-                    />
-                </div>
-                <div className="w-1/4 mx-1">
-                    <select
-                        name="category"
-                        className="p-1 border rounded w-full"
-                        onChange={e => setCategoryId(e.target.value)}
-                    >
-                        <option value="">Select Category</option>
-                        {categories.map((category) => (
-                            <option key={category.id} value={category.id}>{category.name}</option>
-                        ))}
-                    </select>
-                </div>
-                <div className='flex flex-row justify-end w-1/4 mx-1'>
-                    <div className='w-1/4 text-center my-auto'>
-                        <input type="submit" value='✅' className='cursor-pointer' />
-                    </div>
-                    <div className='w-1/4 text-center my-auto'>
-                        <input type="button" value='❌' onClick={() => setEdit('')} className='cursor-pointer' />
-                    </div>
+                <div className='w-1/4 text-center my-auto'>
+                    <input type="button" value='❌' onClick={() => setEdit('')} className='cursor-pointer' />
                 </div>
             </div>
-        </form>
+        </div>
     )
 }

@@ -2,6 +2,18 @@ import { useEffect, useState } from 'react'
 import useToken from '../hooks/useToken'
 import AddEntry from './AddEntry'
 import EditEntry from './EditEntry';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+
 
 interface EntriesProps {
     date: string,
@@ -109,7 +121,23 @@ export default function Entries({ date, typeOfEntry }: EntriesProps) {
                                         <input type="button" value='✏️' onClick={() => setEdit(`${entry.id}`)} className='cursor-pointer' />
                                     </div>
                                     <div className='w-1/4 text-center my-auto'>
-                                        <input type="button" value='🗑️' onClick={() => deleteEntry(entry.id)} className='cursor-pointer' />
+                                        <AlertDialog>
+                                            <AlertDialogTrigger asChild>
+                                                <input type="button" value='🗑️' className='cursor-pointer' />
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>Are you sure you want to delete?</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        This action is permanent.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                    <AlertDialogAction className='bg-blue-500 hover:bg-blue-600' onClick={() => deleteEntry(entry.id)}>Continue</AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
                                     </div>
                                 </div>
                             </div>
