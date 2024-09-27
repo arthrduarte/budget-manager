@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Navbar from './Navbar'
-import Expenses from './Expenses'
-import Income from './Income'
+import Entries from './Entries'
 
 export default function Dashboard() {
   const [displayDate, setDisplayDate] = useState('')
@@ -40,19 +39,19 @@ export default function Dashboard() {
     <>
       <Navbar />
       <div>
-        <div>
+        <div className='flex flex-col items-center'>
           <div>
-            <h3>{year}</h3>
+            <h3 className='font-bold text-lg'>{year}</h3>
           </div>
-          <div className='flex space-x-4'>
-            <p onClick={() => datePicker('decrease')}>&lt;</p>
-            <h3>{month}</h3>
-            <p onClick={() => datePicker('increase')}>&gt;</p>
+          <div className='flex w-1/6 justify-between font-bold text-lg'>
+            <p className='cursor-pointer' onClick={() => datePicker('decrease')}>&lt;</p>
+            <h3 className='mx-5'>{month}</h3>
+            <p className='cursor-pointer' onClick={() => datePicker('increase')}>&gt;</p>
           </div>
         </div>
         <div className='flex flex-col lg:flex-row'>
-            <Expenses date={displayDate} />
-            <Income date={displayDate} />
+          <Entries date={displayDate} typeOfEntry='expense' />
+          <Entries date={displayDate} typeOfEntry='income' />
         </div>
       </div>
     </>
