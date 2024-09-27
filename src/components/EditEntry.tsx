@@ -25,7 +25,7 @@ interface EditEntryProps {
     entry: {
         id: number,
         name: string;
-        amount: string;
+        amount: number;
         category_name: string;
     },
     type: string,
@@ -51,8 +51,7 @@ export default function EditEntry({ entry, type, categories, date, fetchData, se
             return;
         }
 
-        const amountPattern = /^[0-9.,]+$/;
-        if (!amountPattern.test(amount)) {
+        if (!Number(amount)) {
             setError('Amount must be a valid number.')
             return;
         }
@@ -95,7 +94,7 @@ export default function EditEntry({ entry, type, categories, date, fetchData, se
                         name="amount"
                         value={amount}
                         className="p-1 border rounded w-full h-full"
-                        onChange={e => setAmount(e.target.value)}
+                        onChange={e => setAmount(Number(e.target.value))}
                     />
                 </div>
                 <CategoryDropdown setCategoryId={setCategoryId} categories={categories} category_id={category_id} type={type} fetchCategories={fetchCategories} />

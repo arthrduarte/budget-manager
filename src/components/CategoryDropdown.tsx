@@ -8,6 +8,8 @@ import {
 import { Button } from './ui/button';
 import useToken from '@/hooks/useToken';
 import { Input } from './ui/input';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle, AlertDialogTrigger } from '@radix-ui/react-alert-dialog';
+import { AlertDialogFooter, AlertDialogHeader } from './ui/alert-dialog';
 
 
 interface Category {
@@ -33,6 +35,7 @@ export default function CategoryDropdown({ setCategoryId, categories, category_i
     const [error, setError] = useState('');
 
     const handleCategorySelect = (category: Category) => {
+        console.log(category.name)
         setSelectedCategory(category);
         setCategoryId(category.id.toString());
     };
@@ -60,6 +63,22 @@ export default function CategoryDropdown({ setCategoryId, categories, category_i
             console.error('Failed to create category');
         }
     };
+
+    const deleteCategory = async (category_id: number) => {
+        const response = await fetch('http://localhost:9000/category', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ category_id }),
+        });
+        if (response.ok) {
+            fetchCategories();
+        } else {
+            console.error('Failed to delete category');
+        }
+    }
 
 
     return (
@@ -96,9 +115,32 @@ export default function CategoryDropdown({ setCategoryId, categories, category_i
                     {categories.map((category) => (
                         <DropdownMenuItem
                             key={category.id}
-                            onClick={() => handleCategorySelect(category)}
+                            className='flex flex-row'
                         >
-                            {category.name}
+                            <div className='w-full' onClick={() => handleCategorySelect(category)}>
+                                <p>{category.name}</p>
+                            </div>
+                            <div>
+                                {/* <AlertDialog>
+                                    <AlertDialogTrigger asChild> */}
+                                <input onClick={() => deleteCategory(category.id)} type="button" value='🗑️' className='cursor-pointer' />
+                                {/* </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>Are you sure you want to delete?</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                This action is permanent.
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                            <AlertDialogAction className='bg-blue-500 hover:bg-blue-600' onClick={() => console.log(category.id)}>Continue</AlertDialogAction>
+                                        </AlertDialogFooter>
+
+                                    </AlertDialogContent>
+                                </AlertDialog> */}
+
+                            </div>
                         </DropdownMenuItem>
                     ))}
                 </DropdownMenuContent>

@@ -29,7 +29,7 @@ interface Category {
 interface Entry {
     id: number,
     name: string;
-    amount: string;
+    amount: number;
     category_name: string;
 }
 
@@ -38,7 +38,7 @@ export default function Entries({ date, typeOfEntry }: EntriesProps) {
     const [entries, setEntries] = useState<Entry[]>([])
     const [edit, setEdit] = useState('')
     const [categories, setCategories] = useState<Category[]>([])
-    const [totalAmount, setTotalAmount] = useState('')
+    const [totalAmount, setTotalAmount] = useState(0)
 
     const fetchEntries = async () => {
         const response = await fetch(`http://localhost:9000/${typeOfEntry}/` + date, {
@@ -48,15 +48,16 @@ export default function Entries({ date, typeOfEntry }: EntriesProps) {
                 'Authorization': `Bearer ${token}`
             }
         })
-        if(response.ok){
+        if (response.ok) {
             const data: Entry[] = await response.json()
-            if(data.length != 0){
-                setTotalAmount(data.map(entry => entry.amount).reduce((prev, next) => prev + next))
+            if (data.length != 0) {
+                const total = data.map(entry => entry.amount).reduce((prev, next) => prev + next).toFixed(2)
+                setTotalAmount(Number(total))
             } else {
-                setTotalAmount('0')
+                setTotalAmount(0)
             }
             setEntries(data)
-        } 
+        }
     }
 
     const fetchCategories = async () => {
@@ -89,7 +90,7 @@ export default function Entries({ date, typeOfEntry }: EntriesProps) {
     useEffect(() => {
         fetchEntries()
         fetchCategories()
-        
+
     }, [date, edit])
 
     return (

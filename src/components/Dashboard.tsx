@@ -43,10 +43,10 @@ export default function Dashboard() {
           <div>
             <h3 className='font-bold text-lg'>{year}</h3>
           </div>
-          <div className='flex space-x-4 font-bold text-lg'>
-            <p onClick={() => datePicker('decrease')}>&lt;</p>
-            <h3>{month}</h3>
-            <p onClick={() => datePicker('increase')}>&gt;</p>
+          <div className='flex w-1/6 justify-between font-bold text-lg'>
+            <p className='cursor-pointer' onClick={() => datePicker('decrease')}>&lt;</p>
+            <h3 className='mx-5'>{month}</h3>
+            <p className='cursor-pointer' onClick={() => datePicker('increase')}>&gt;</p>
           </div>
         </div>
         <div className='flex flex-col lg:flex-row'>

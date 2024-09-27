@@ -31,8 +31,7 @@ export default function AddEntry({ type, date, fetchData, categories, fetchCateg
             return;
         }
 
-        const amountPattern = /^[0-9.,]+$/;
-        if (!amountPattern.test(amount)) {
+        if (!Number(amount)) {
             setError('Amount must be a valid number.')
             return;
         }
