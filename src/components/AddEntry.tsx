@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import useToken from '../hooks/useToken'
 import CategoryDropdown from './CategoryDropdown';
 import { Button } from './ui/button';

@@ -50,8 +50,8 @@ export default function Dashboard() {
           </div>
         </div>
         <div className='flex flex-col lg:flex-row'>
-            <Entries date={displayDate} typeOfEntry='expense'/>
-            <Entries date={displayDate} typeOfEntry='income'/>
+          <Entries date={displayDate} typeOfEntry='expense' />
+          <Entries date={displayDate} typeOfEntry='income' />
         </div>
       </div>
     </>

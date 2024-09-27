@@ -17,7 +17,7 @@ import {
 
 interface EntriesProps {
     date: string,
-    typeOfEntry: string
+    typeOfEntry: string,
 }
 
 interface Category {
@@ -29,7 +29,7 @@ interface Category {
 interface Entry {
     id: number,
     name: string;
-    amount: number;
+    amount: string;
     category_name: string;
 }
 
@@ -38,6 +38,7 @@ export default function Entries({ date, typeOfEntry }: EntriesProps) {
     const [entries, setEntries] = useState<Entry[]>([])
     const [edit, setEdit] = useState('')
     const [categories, setCategories] = useState<Category[]>([])
+    const [totalAmount, setTotalAmount] = useState('')
 
     const fetchEntries = async () => {
         const response = await fetch(`http://localhost:9000/${typeOfEntry}/` + date, {
@@ -47,8 +48,15 @@ export default function Entries({ date, typeOfEntry }: EntriesProps) {
                 'Authorization': `Bearer ${token}`
             }
         })
-        const data: Entry[] = await response.json()
-        setEntries(data)
+        if(response.ok){
+            const data: Entry[] = await response.json()
+            if(data.length != 0){
+                setTotalAmount(data.map(entry => entry.amount).reduce((prev, next) => prev + next))
+            } else {
+                setTotalAmount('0')
+            }
+            setEntries(data)
+        } 
     }
 
     const fetchCategories = async () => {
@@ -81,12 +89,13 @@ export default function Entries({ date, typeOfEntry }: EntriesProps) {
     useEffect(() => {
         fetchEntries()
         fetchCategories()
+        
     }, [date, edit])
 
     return (
         <div className='lg:w-1/2 lg:mx-5 mt-5'>
             <div className='text-center mb-1'>
-                <h1 className='font-semibold text-lg'>{typeOfEntry.charAt(0).toUpperCase() + typeOfEntry.slice(1)}</h1>
+                <h1 className='font-semibold text-lg'>{typeOfEntry.charAt(0).toUpperCase() + typeOfEntry.slice(1)}: ${totalAmount}</h1>
             </div>
             <div className='shadow-xl rounded-xl'>
                 <div className='flex flex-row py-1 bg-gray-300'>
