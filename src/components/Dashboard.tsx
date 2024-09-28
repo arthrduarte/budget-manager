@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Navbar from './Navbar'
 import Entries from './Entries'
+import Chart from './Chart'
 
 export default function Dashboard() {
   const [displayDate, setDisplayDate] = useState('')
@@ -10,6 +11,8 @@ export default function Dashboard() {
   ]
   const [month, setMonth] = useState(months[new Date().getMonth()])
   const [year, setYear] = useState(new Date().getFullYear())
+  const [expenseAmount, setExpenseAmount] = useState(0)
+  const [incomeAmount, setIncomeAmount] = useState(0)
 
   useEffect(() => {
     const monthIndex = months.indexOf(month) + 1;
@@ -50,9 +53,12 @@ export default function Dashboard() {
           </div>
         </div>
         <div className='flex flex-col lg:flex-row'>
-          <Entries date={displayDate} typeOfEntry='expense' />
-          <Entries date={displayDate} typeOfEntry='income' />
+          <Entries date={displayDate} typeOfEntry='expense' setAmountForChart={setExpenseAmount} />
+          <Entries date={displayDate} typeOfEntry='income' setAmountForChart={setIncomeAmount} />
         </div>
+      </div>
+      <div className='w-1/2 py-5 mx-auto'>
+        <Chart typeOfData={['Expense', 'Income']} amount={[expenseAmount, incomeAmount]} />
       </div>
     </>
   )
