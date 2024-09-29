@@ -18,6 +18,7 @@ import {
 interface EntriesProps {
     date: string,
     typeOfEntry: string,
+    setAmountForChart: (amount: number) => void
 }
 
 interface Category {
@@ -33,7 +34,7 @@ interface Entry {
     category_name: string;
 }
 
-export default function Entries({ date, typeOfEntry }: EntriesProps) {
+export default function Entries({ date, typeOfEntry, setAmountForChart }: EntriesProps) {
     const { token } = useToken()
     const [entries, setEntries] = useState<Entry[]>([])
     const [edit, setEdit] = useState('')
@@ -53,6 +54,7 @@ export default function Entries({ date, typeOfEntry }: EntriesProps) {
             if (data.length != 0) {
                 const total = data.map(entry => entry.amount).reduce((prev, next) => prev + next).toFixed(2)
                 setTotalAmount(Number(total))
+                setAmountForChart(Number(total))
             } else {
                 setTotalAmount(0)
             }
