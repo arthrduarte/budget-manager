@@ -32,9 +32,7 @@ const BarChart = ({ typeOfData, amount }: BarChartProps) => {
             {
                 label: 'Amount',
                 data: amount,
-                backgroundColor: 'rgb(34, 197, 94, 0.5)', // Bar colors
-                borderColor: 'rgba(75, 192, 192, 1)', // Bar border colors
-                borderWidth: 1,
+                backgroundColor: 'rgb(34, 197, 94, 0.5)',
             },
         ],
     };
@@ -43,28 +41,29 @@ const BarChart = ({ typeOfData, amount }: BarChartProps) => {
         responsive: true,
         plugins: {
             legend: {
-                position: 'top' as const,
+                position: 'bottom' as const,
             },
-            title: {
-                display: true,
-                text: 'Bar Chart Example',
-            },
+            // title: {
+            //     display: true,
+            //     text: 'Your Monthly Budget Chart',
+            // },
         },
         scales: {
             x: {
                 grid: {
-                    display: false,  // Hide grid lines on the x-axis
+                    display: true,
                 },
                 ticks: {
-                    display: false,  // Hide tick marks and labels on the x-axis
+                    display: true,
                 },
             },
             y: {
                 grid: {
-                    display: false,  // Hide grid lines on the y-axis
+                    display: false,
                 },
                 ticks: {
-                    display: false,  // Hide tick marks and labels on the y-axis
+                    display: true,
+                    maxTicksLimit: 7
                 },
             },
         },

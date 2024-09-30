@@ -96,7 +96,7 @@ export default function Entries({ date, typeOfEntry, setAmountForChart }: Entrie
     }, [date, edit])
 
     return (
-        <div className='lg:w-1/2 lg:mx-5 mt-5'>
+        <div className='lg:mx-5 mt-5'>
             <div className='text-center mb-1'>
                 <h1 className='font-semibold text-lg'>{typeOfEntry.charAt(0).toUpperCase() + typeOfEntry.slice(1)}: ${totalAmount}</h1>
             </div>
