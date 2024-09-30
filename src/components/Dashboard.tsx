@@ -66,7 +66,7 @@ export default function Dashboard() {
         <div className='w-full lg:w-1/2'>
           <Chart typeOfData={['Expense', 'Income']} amount={[expenseAmount, incomeAmount]} />
         </div>
-        <div className='w-full lg:w-1/2 my-5'>
+        <div className='w-full lg:w-1/2 my-5 lg:my-0'>
           <Entries date={displayDate} typeOfEntry='expense' setAmountForChart={setExpenseAmount} />
         </div>
         <div className='w-full lg:w-1/2'>
