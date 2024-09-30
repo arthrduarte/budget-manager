@@ -1,5 +1,14 @@
 import { useEffect, useState } from 'react'
 import useToken from '../hooks/useToken'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
 
 interface UserData {
     first_name: string;
@@ -27,8 +36,8 @@ export default function Navbar() {
         fetchData()
     }, [token])
 
-    useEffect(()=>{
-        if(logout){
+    useEffect(() => {
+        if (logout) {
             localStorage.removeItem('token');
             setLogout(false)
             window.location.reload();
@@ -36,11 +45,17 @@ export default function Navbar() {
     }, [logout])
 
     return (
-        <div className='flex flex-row justify-between w-full'>
-            <h1>💸 Budget Tracker</h1>
+        <div className='flex justify-between items-center'>
+            <h1 className='text-green-500 font-bold text-2xl'>💸 Budget Tracker</h1>
             <div>
-                <p>{data && data[0].first_name}</p>
-                {token && <p onClick={() => setLogout(true)}>Logout</p>}
+                <DropdownMenu>
+                    <DropdownMenuTrigger className='font-semibold'>{data && data[0].first_name} 👤</DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>{token && <p onClick={() => setLogout(true)}>Logout</p>}</DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
         </div>
     )
