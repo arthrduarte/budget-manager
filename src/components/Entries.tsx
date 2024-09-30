@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/alert-dialog"
 
 
+
 interface EntriesProps {
     date: string,
     typeOfEntry: string,
@@ -97,62 +98,90 @@ export default function Entries({ date, typeOfEntry, setAmountForChart }: Entrie
 
     return (
         <div className='lg:mx-5 mt-5'>
-            <div className='text-center mb-1'>
-                <h1 className='font-semibold text-lg'>{typeOfEntry.charAt(0).toUpperCase() + typeOfEntry.slice(1)}: ${totalAmount}</h1>
-            </div>
-            <div className='shadow-xl rounded-xl'>
-                <div className='flex flex-row py-1 bg-gray-300'>
-                    <div className='w-1/4 text-center'>
-                        <p>Name</p>
-                    </div>
-                    <div className='w-1/4 text-center'>
-                        <p>Amount</p>
-                    </div>
-                    <div className='w-1/4 text-center'>
-                        <p>Category</p>
-                    </div>
-                </div>
+            <div className='flex justify-between '>
+                <h1 className='font-semibold text-2xl'>{typeOfEntry.charAt(0).toUpperCase() + typeOfEntry.slice(1)}</h1>
                 <AddEntry type={`${typeOfEntry}`} date={date} fetchData={fetchEntries} categories={categories} fetchCategories={fetchCategories} />
+            </div>
+            <div className='flex flex-wrap'>
                 {entries.map((entry, index) => (
                     <>
                         {edit && edit == `${entry.id}` ? (
                             <EditEntry type="expense" date={date} fetchData={fetchEntries} entry={entry} categories={categories} setEdit={setEdit} fetchCategories={fetchCategories} />
                         ) : (
-                            <div className='flex flex-row text-sm py-1' key={index}>
-                                <div className='w-1/4 text-center mx-1'>
-                                    <p>{entry.name}</p>
-                                </div>
-                                <div className='w-1/4 text-center mx-1'>
-                                    <p>{entry.amount}</p>
-                                </div>
-                                <div className='w-1/4 text-center mx-1'>
-                                    <p>{entry.category_name || 'No Category'}</p>
-                                </div>
-                                <div className='flex flex-row justify-end w-1/4 mx-1'>
-                                    <div className='w-1/4 text-center my-auto'>
-                                        <input type="button" value='✏️' onClick={() => setEdit(`${entry.id}`)} className='cursor-pointer' />
+                            <div className='flex flex-row my-1 p-3 w-1/2 lg:w-[30%] lg:mx-2 shadow-xl rounded-xl'>
+                                <div className='flex flex-col w-1/2'>
+                                    <div>
+                                        <p className='font-semibold text-xl'>{entry.name}</p>
                                     </div>
-                                    <div className='w-1/4 text-center my-auto'>
-                                        <AlertDialog>
-                                            <AlertDialogTrigger asChild>
-                                                <input type="button" value='🗑️' className='cursor-pointer' />
-                                            </AlertDialogTrigger>
-                                            <AlertDialogContent>
-                                                <AlertDialogHeader>
-                                                    <AlertDialogTitle>Are you sure you want to delete?</AlertDialogTitle>
-                                                    <AlertDialogDescription>
-                                                        This action is permanent.
-                                                    </AlertDialogDescription>
-                                                </AlertDialogHeader>
-                                                <AlertDialogFooter>
-                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction className='bg-blue-500 hover:bg-blue-600' onClick={() => deleteEntry(entry.id)}>Continue</AlertDialogAction>
-                                                </AlertDialogFooter>
-                                            </AlertDialogContent>
-                                        </AlertDialog>
+                                    <div>
+                                        <p className='text-sm opacity-75'>{entry.category_name}</p>
+                                    </div>
+                                </div>
+                                <div className='flex flex-col w-1/2 justify-center items-end'>
+                                    <div>
+                                        <p className='font-semibold'>${entry.amount}</p>
+                                    </div>
+                                    <div className='flex flex-row'>
+                                        <div>
+                                            <input type="button" value='✏️' onClick={() => setEdit(`${entry.id}`)} className='cursor-pointer' />
+                                        </div>
+                                        <div>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <input type="button" value='🗑️' className='cursor-pointer' />
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle>Are you sure you want to delete?</AlertDialogTitle>
+                                                        <AlertDialogDescription>
+                                                            This action is permanent.
+                                                        </AlertDialogDescription>
+                                                    </AlertDialogHeader>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                        <AlertDialogAction className='bg-blue-500 hover:bg-blue-600' onClick={() => deleteEntry(entry.id)}>Continue</AlertDialogAction>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            // <div className='flex flex-row text-sm py-1' key={index}>
+                            //     <div className='w-1/4 text-center mx-1'>
+                            //         <p>{entry.name}</p>
+                            //     </div>
+                            //     <div className='w-1/4 text-center mx-1'>
+                            //         <p>{entry.amount}</p>
+                            //     </div>
+                            //     <div className='w-1/4 text-center mx-1'>
+                            //         <p>{entry.category_name || 'No Category'}</p>
+                            //     </div>
+                            //     <div className='flex flex-row justify-end w-1/4 mx-1'>
+                            //         <div className='w-1/4 text-center my-auto'>
+                            //             <input type="button" value='✏️' onClick={() => setEdit(`${entry.id}`)} className='cursor-pointer' />
+                            //         </div>
+                            //         <div className='w-1/4 text-center my-auto'>
+                                        // <AlertDialog>
+                                        //     <AlertDialogTrigger asChild>
+                                        //         <input type="button" value='🗑️' className='cursor-pointer' />
+                                        //     </AlertDialogTrigger>
+                                        //     <AlertDialogContent>
+                                        //         <AlertDialogHeader>
+                                        //             <AlertDialogTitle>Are you sure you want to delete?</AlertDialogTitle>
+                                        //             <AlertDialogDescription>
+                                        //                 This action is permanent.
+                                        //             </AlertDialogDescription>
+                                        //         </AlertDialogHeader>
+                                        //         <AlertDialogFooter>
+                                        //             <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                        //             <AlertDialogAction className='bg-blue-500 hover:bg-blue-600' onClick={() => deleteEntry(entry.id)}>Continue</AlertDialogAction>
+                                        //         </AlertDialogFooter>
+                                        //     </AlertDialogContent>
+                                        // </AlertDialog>
+                            //         </div>
+                            //     </div>
+                            // </div>
                         )}
                     </>
                 ))}
