@@ -15,6 +15,8 @@ export default function Dashboard() {
   const [incomeAmount, setIncomeAmount] = useState(0)
 
   useEffect(() => {
+    setIncomeAmount(0)
+    setExpenseAmount(0)
     const monthIndex = months.indexOf(month) + 1;
     const formattedMonth = monthIndex < 10 ? `0${monthIndex}` : monthIndex;
     setDisplayDate(`${year}-${formattedMonth}`);
@@ -42,25 +44,24 @@ export default function Dashboard() {
     <>
       <Navbar />
       <div className='flex flex-wrap'>
-        <div className='w-full lg:w-1/2 my-5'>
+        <div className='w-full lg:flex lg:flex-col justify-center lg:w-1/2 my-5'>
           <div className='flex justify-center font-bold text-lg'>
             <p className='cursor-pointer' onClick={() => datePicker('decrease')}>&lt;</p>
-            <h3 className='mx-5'>{month}</h3>
+            <h3 className='text-center w-1/3'>{month}</h3>
             <p className='cursor-pointer' onClick={() => datePicker('increase')}>&gt;</p>
           </div>
           <div className='w-full flex flex-row justify-center py-5'>
             <div className='bg-[#202938] px-3 py-1'>
               <p className='text-white font-bold'>Expenses:</p>
-              <p className='text-red-500'>{expenseAmount}</p>
+              <p className='text-red-500'>${expenseAmount}</p>
             </div>
             <div className='mx-5 bg-[#202938] px-3 py-1'>
               <p className='text-white font-bold'>Income:</p>
-              <p className='text-green-500'>{incomeAmount}</p>
+              <p className='text-green-500'>${incomeAmount}</p>
             </div>
             <div className='bg-[#202938] px-3 py-1'>
               <p className='text-white font-bold'>Balance:</p>
-              <p className='text-white'>{incomeAmount - expenseAmount}</p> {/* Add logic for color */}
-            </div>
+              <p className={`${(incomeAmount - expenseAmount) > 0 ? 'text-green-500' : (incomeAmount - expenseAmount) < 0 ? 'text-red-500' : 'text-white'}`}>${incomeAmount - expenseAmount}</p>            </div>
           </div>
         </div>
         <div className='w-full lg:w-1/2'>

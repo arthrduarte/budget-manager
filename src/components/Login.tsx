@@ -33,7 +33,7 @@ export default function Login({ setToken, setRegistered }: LoginProps) {
   return (
     <div className='flex flex-col items-center p-5'>
       <Navbar/>
-      <h1>Login</h1>
+      <h1 className='my-5 text-2xl font-bold'>Login</h1>
       <form action="post" onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email:</label>

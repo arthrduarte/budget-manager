@@ -98,7 +98,7 @@ export default function CategoryDropdown({ setCategoryId, categories, category_i
                                     className="p-1 border rounded"
                                     value={newCategory}
                                     onChange={(e) => setNewCategory(e.target.value)}
-                                    placeholder={`New ${type}`}
+                                    placeholder={`New category`}
                                 />
                                 <Button
                                     className="bg-green-500 text-white p-1 rounded"
@@ -120,27 +120,27 @@ export default function CategoryDropdown({ setCategoryId, categories, category_i
                             <div className='w-full' onClick={() => handleCategorySelect(category)}>
                                 <p>{category.name}</p>
                             </div>
-                            <div>
-                                {/* <AlertDialog>
-                                    <AlertDialogTrigger asChild> */}
-                                <input onClick={() => deleteCategory(category.id)} type="button" value='🗑️' className='cursor-pointer' />
-                                {/* </AlertDialogTrigger>
+                            {/* <div>
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <input onClick={(e) => e.stopPropagation()} type="button" value='🗑️' className='cursor-pointer' />
+                                    </AlertDialogTrigger>
                                     <AlertDialogContent>
                                         <AlertDialogHeader>
                                             <AlertDialogTitle>Are you sure you want to delete?</AlertDialogTitle>
                                             <AlertDialogDescription>
-                                                This action is permanent.
+                                                This action is permanent and will delete all entries with this category.
                                             </AlertDialogDescription>
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
                                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                            <AlertDialogAction className='bg-blue-500 hover:bg-blue-600' onClick={() => console.log(category.id)}>Continue</AlertDialogAction>
+                                            <AlertDialogAction className='bg-green-500 hover:bg-green-600' onClick={() => deleteCategory(category.id)}>Continue</AlertDialogAction>
                                         </AlertDialogFooter>
 
                                     </AlertDialogContent>
-                                </AlertDialog> */}
+                                </AlertDialog>
 
-                            </div>
+                            </div> */}
                         </DropdownMenuItem>
                     ))}
                 </DropdownMenuContent>
