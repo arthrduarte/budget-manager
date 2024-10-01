@@ -46,17 +46,19 @@ export default function Navbar() {
 
     return (
         <div className='flex justify-between items-center'>
-            <h1 className='text-green-500 font-bold text-2xl'>💸 Budget Tracker</h1>
-            <div>
-                <DropdownMenu>
-                    <DropdownMenuTrigger className='font-semibold'>{data && data[0].first_name} 👤</DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>{token && <p onClick={() => setLogout(true)}>Logout</p>}</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </div>
+            <h1 className='text-green-500 font-bold text-2xl'>💸 Budget Manager</h1>
+            {token &&
+                <div>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger className='font-semibold'>{data && data[0].first_name} 👤</DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>{token && <p onClick={() => setLogout(true)}>Logout</p>}</DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+            }
         </div>
     )
 }

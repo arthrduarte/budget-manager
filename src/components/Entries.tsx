@@ -98,8 +98,8 @@ export default function Entries({ date, typeOfEntry, setAmountForChart }: Entrie
 
     return (
         <div className='lg:mx-5 mt-5'>
-            <div className='flex justify-between '>
-                <h1 className='font-semibold text-2xl'>{typeOfEntry.charAt(0).toUpperCase() + typeOfEntry.slice(1)}</h1>
+            <div className='flex lg:mx-2'>
+                <h1 className='font-semibold text-2xl mr-5'>{typeOfEntry.charAt(0).toUpperCase() + typeOfEntry.slice(1)}:</h1>
                 <AddEntry type={`${typeOfEntry}`} date={date} fetchData={fetchEntries} categories={categories} fetchCategories={fetchCategories} />
             </div>
             <div className='flex flex-wrap'>
@@ -109,9 +109,9 @@ export default function Entries({ date, typeOfEntry, setAmountForChart }: Entrie
                             <EditEntry type="expense" date={date} fetchData={fetchEntries} entry={entry} categories={categories} setEdit={setEdit} fetchCategories={fetchCategories} />
                         ) : (
                             <div className='flex flex-row my-1 p-3 w-1/2 lg:w-[30%] lg:mx-2 shadow-xl rounded-xl'>
-                                <div className='flex flex-col w-1/2'>
+                                <div className='flex flex-col w-1/2 justify-center'>
                                     <div>
-                                        <p className='font-semibold text-xl'>{entry.name}</p>
+                                        <p className='font-semibold text-sm'>{entry.name}</p>
                                     </div>
                                     <div>
                                         <p className='text-sm opacity-75'>{entry.category_name}</p>

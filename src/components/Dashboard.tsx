@@ -44,10 +44,10 @@ export default function Dashboard() {
     <>
       <Navbar />
       <div className='flex flex-wrap'>
-        <div className='w-full lg:w-1/2 my-5'>
+        <div className='w-full lg:flex lg:flex-col justify-center lg:w-1/2 my-5'>
           <div className='flex justify-center font-bold text-lg'>
             <p className='cursor-pointer' onClick={() => datePicker('decrease')}>&lt;</p>
-            <h3 className='mx-5'>{month}</h3>
+            <h3 className='text-center w-1/3'>{month}</h3>
             <p className='cursor-pointer' onClick={() => datePicker('increase')}>&gt;</p>
           </div>
           <div className='w-full flex flex-row justify-center py-5'>
