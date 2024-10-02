@@ -8,19 +8,17 @@ import {
 import { Button } from './ui/button';
 import useToken from '@/hooks/useToken';
 import { Input } from './ui/input';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle, AlertDialogTrigger } from '@radix-ui/react-alert-dialog';
-import { AlertDialogFooter, AlertDialogHeader } from './ui/alert-dialog';
-
+import { ObjectId } from 'bson';
 
 interface Category {
-    id: number;
+    _id: ObjectId;
     name: string;
     type: string;
 }
 
 interface CategoryDropdownProps {
-    setCategoryId: (id: string) => void,
-    category_id: string,
+    setCategoryId: (_id: ObjectId) => void,
+    category_id: ObjectId | null,
     categories: Category[],
     type: string,
     fetchCategories: () => void
@@ -29,7 +27,7 @@ interface CategoryDropdownProps {
 export default function CategoryDropdown({ setCategoryId, categories, category_id, type, fetchCategories }: CategoryDropdownProps) {
     const { token } = useToken()
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-        categories.find(category => category.id.toString() === category_id) || null
+        categories.find(category => category._id.equals(category_id)) || null
     );
     const [newCategory, setNewCategory] = useState('')
     const [error, setError] = useState('');
@@ -37,7 +35,7 @@ export default function CategoryDropdown({ setCategoryId, categories, category_i
     const handleCategorySelect = (category: Category) => {
         console.log(category.name)
         setSelectedCategory(category);
-        setCategoryId(category.id.toString());
+        setCategoryId(category._id);
     };
 
     const handleCreateCategory = async () => {
@@ -114,7 +112,7 @@ export default function CategoryDropdown({ setCategoryId, categories, category_i
                     }
                     {categories.map((category) => (
                         <DropdownMenuItem
-                            key={category.id}
+                            key={category._id.toString()}
                             className='flex flex-row'
                         >
                             <div className='w-full' onClick={() => handleCategorySelect(category)}>

@@ -14,16 +14,17 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Input } from './ui/input';
+import { ObjectId } from 'bson';
 
 interface Category {
-    id: number;
+    _id: ObjectId;
     name: string;
     type: string;
 }
 
 interface EditEntryProps {
     entry: {
-        id: number,
+        _id: ObjectId,
         name: string;
         amount: number;
         category_name: string;
@@ -43,7 +44,7 @@ export default function EditEntry({ entry, type, categories, date, fetchData, se
     const [error, setError] = useState('')
 
     const initialCategory = categories.find(cat => cat.name === entry.category_name)
-    const [category_id, setCategoryId] = useState(initialCategory ? initialCategory.id.toString() : '')
+    const [category_id, setCategoryId] = useState(initialCategory ? initialCategory._id : null)
 
     const editEntry = async () => {
         if (!name || !amount || !category_id) {
@@ -62,7 +63,7 @@ export default function EditEntry({ entry, type, categories, date, fetchData, se
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ name, amount, date, category_id, expense_id: entry.id })
+            body: JSON.stringify({ name, amount, date, category_id, expense_id: entry._id })
         })
         if (response.ok) {
             fetchData();
@@ -77,7 +78,7 @@ export default function EditEntry({ entry, type, categories, date, fetchData, se
                 <Input
                     type="hidden"
                     name="entry_id"
-                    value={entry.id}
+                    value={entry._id.toString()}
                 />
                 <div className="w-1/4 mx-1">
                     <Input

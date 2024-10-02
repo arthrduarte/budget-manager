@@ -13,6 +13,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { ObjectId } from 'bson';
 
 
 
@@ -23,13 +24,13 @@ interface EntriesProps {
 }
 
 interface Category {
-    id: number;
+    _id: ObjectId;
     name: string;
     type: string;
 }
 
 interface Entry {
-    id: number,
+    _id: ObjectId,
     name: string;
     amount: number;
     category_name: string;
@@ -75,7 +76,7 @@ export default function Entries({ date, typeOfEntry, setAmountForChart }: Entrie
         setCategories(data)
     }
 
-    const deleteEntry = async (entry_id: number) => {
+    const deleteEntry = async (entry_id: ObjectId) => {
         const body = typeOfEntry === 'income' ? { income_id: entry_id } : { expense_id: entry_id };
         const response = await fetch(`http://localhost:9000/${typeOfEntry}`, {
             method: 'DELETE',
@@ -105,7 +106,7 @@ export default function Entries({ date, typeOfEntry, setAmountForChart }: Entrie
             <div className='flex flex-wrap'>
                 {entries.map((entry, index) => (
                     <>
-                        {edit && edit == `${entry.id}` ? (
+                        {edit && edit == `${entry._id}` ? (
                             <EditEntry type="expense" date={date} fetchData={fetchEntries} entry={entry} categories={categories} setEdit={setEdit} fetchCategories={fetchCategories} />
                         ) : (
                             <div className='flex flex-row my-1 p-3 w-1/2 lg:w-[30%] lg:mx-2 shadow-xl rounded-xl'>
@@ -123,7 +124,7 @@ export default function Entries({ date, typeOfEntry, setAmountForChart }: Entrie
                                     </div>
                                     <div className='flex flex-row'>
                                         <div>
-                                            <input type="button" value='✏️' onClick={() => setEdit(`${entry.id}`)} className='cursor-pointer' />
+                                            <input type="button" value='✏️' onClick={() => setEdit(`${entry._id}`)} className='cursor-pointer' />
                                         </div>
                                         <div>
                                             <AlertDialog>
@@ -139,7 +140,7 @@ export default function Entries({ date, typeOfEntry, setAmountForChart }: Entrie
                                                     </AlertDialogHeader>
                                                     <AlertDialogFooter>
                                                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                        <AlertDialogAction className='bg-blue-500 hover:bg-blue-600' onClick={() => deleteEntry(entry.id)}>Continue</AlertDialogAction>
+                                                        <AlertDialogAction className='bg-blue-500 hover:bg-blue-600' onClick={() => deleteEntry(entry._id)}>Continue</AlertDialogAction>
                                                     </AlertDialogFooter>
                                                 </AlertDialogContent>
                                             </AlertDialog>

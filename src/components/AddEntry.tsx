@@ -11,10 +11,11 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import { ObjectId } from 'bson';
 
 
 interface Category {
-    id: number;
+    _id: ObjectId;
     name: string;
     type: string;
 }
@@ -31,7 +32,7 @@ export default function AddEntry({ type, date, fetchData, categories, fetchCateg
     const { token } = useToken()
     const [name, setName] = useState('')
     const [amount, setAmount] = useState('')
-    const [category_id, setCategoryId] = useState('')
+    const [category_id, setCategoryId] = useState<ObjectId | null>(null)
     const [error, setError] = useState('')
 
     const handleSubmit = async () => {
@@ -57,7 +58,7 @@ export default function AddEntry({ type, date, fetchData, categories, fetchCateg
             fetchData();
             setName('');
             setAmount('');
-            setCategoryId('');
+            setCategoryId(null);
             setError('');
         }
     }
