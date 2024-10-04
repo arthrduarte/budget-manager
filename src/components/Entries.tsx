@@ -55,18 +55,6 @@ export default function Entries({ date, typeOfEntry, setAmountForChart }: Entrie
         }
     }
 
-    // const fetchCategories = async () => {
-    //     const response = await fetch('http://localhost:9000/category/' + typeOfEntry, {
-    //         method: 'GET',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             'Authorization': `Bearer ${token}`
-    //         }
-    //     })
-    //     const data: Category[] = await response.json()
-    //     setCategories(data)
-    // }
-
     const deleteEntry = async (entry_id: ObjectId) => {
         const body = typeOfEntry === 'income' ? { income_id: entry_id } : { expense_id: entry_id };
         const response = await fetch(`http://localhost:9000/${typeOfEntry}`, {
@@ -90,13 +78,13 @@ export default function Entries({ date, typeOfEntry, setAmountForChart }: Entrie
         <div className='lg:mx-5 mt-5'>
             <div className='flex lg:mx-2'>
                 <h1 className='font-semibold text-2xl mr-5'>{typeOfEntry.charAt(0).toUpperCase() + typeOfEntry.slice(1)}:</h1>
-                <AddEntry typeOfEntry={typeOfEntry} date={date} fetchEntries={fetchEntries} entries={entries}/>
+                <AddEntry typeOfEntry={typeOfEntry} date={date} fetchEntries={fetchEntries}/>
             </div>
             <div className='flex flex-wrap'>
                 {entries.map((entry, index) => (
                     <>
                         {edit && edit == `${entry._id}` ? (
-                            <EditEntry type={typeOfEntry} date={date} fetchEntries={fetchEntries} entry={entry} setEdit={setEdit} entries={entries} />
+                            <EditEntry typeOfEntry={typeOfEntry} date={date} fetchEntries={fetchEntries} entry={entry} setEdit={setEdit} entries={entries} />
                         ) : (
                             <div className='flex flex-row my-1 p-3 w-1/2 lg:w-[30%] lg:mx-2 shadow-xl rounded-xl'>
                                 <div className='flex flex-col w-1/2 justify-center'>

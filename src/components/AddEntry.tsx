@@ -25,9 +25,10 @@ interface Entry {
 interface AddEntryProps {
     typeOfEntry: string,
     date: string,
+    fetchEntries: () => void
 }
 
-export default function AddEntry({ typeOfEntry, date }: AddEntryProps) {
+export default function AddEntry({ typeOfEntry, date, fetchEntries }: AddEntryProps) {
     const { token } = useToken()
     const [name, setName] = useState('')
     const [amount, setAmount] = useState('')
@@ -37,7 +38,6 @@ export default function AddEntry({ typeOfEntry, date }: AddEntryProps) {
     const [error, setError] = useState('')
 
     const fetchAllEntries = async () => {
-        console.log("Fetching entries for type:", typeOfEntry);
         const response = await fetch(`http://localhost:9000/${typeOfEntry}`, {
             method: 'GET',
             headers: {
@@ -53,13 +53,11 @@ export default function AddEntry({ typeOfEntry, date }: AddEntryProps) {
     };
 
     const sortCategories = () => {
-        console.log("Sorting categories for type:", typeOfEntry);
         const categoriesSet = new Set(categoriesForDropdown);
         entriesForCategoriesDropdown.forEach((entry) => {
             categoriesSet.add(entry.category);
         });
         setCategoriesForDropdown(Array.from(categoriesSet));
-        console.log(categoriesForDropdown);
     };
 
     useEffect(() => {
@@ -101,6 +99,7 @@ export default function AddEntry({ typeOfEntry, date }: AddEntryProps) {
             setAmount('');
             setCategory('');
             setError('');
+            fetchEntries();
         }
     }
 
@@ -135,7 +134,9 @@ export default function AddEntry({ typeOfEntry, date }: AddEntryProps) {
                             onChange={e => setAmount(e.target.value)}
                         />
                     </div>
-                    <CategoryDropdown category={category} setCategory={setCategory} categoriesForDropdown={categoriesForDropdown} />
+                    <div className="w-1/4 mx-1 h-full">
+                        <CategoryDropdown category={category} setCategory={setCategory} categoriesForDropdown={categoriesForDropdown} />
+                    </div>
                     <div className="w-1/4 mx-1">
                         <Button onClick={handleSubmit} className='bg-green-500 hover:bg-green-400 w-full h-full'>Add</Button>
                     </div>

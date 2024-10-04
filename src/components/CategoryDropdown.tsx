@@ -16,44 +16,42 @@ interface CategoryDropdownProps {
 export default function CategoryDropdown({ setCategory, category, categoriesForDropdown }: CategoryDropdownProps) {
 
     return (
-        <div className="w-1/4 mx-1 h-full">
-            <DropdownMenu>
-                <DropdownMenuTrigger className='w-full h-full'>
-                    <Input
-                        type="text"
-                        name="category"
-                        placeholder="Category"
-                        className="p-1 border rounded w-full h-full"
-                        value={category}
-                        onChange={e => setCategory(e.target.value)}
-                    />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                    <DropdownMenuItem className="mt-2">
-                        <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
-                            <div className="flex items-center space-x-2">
-                                <Input
-                                    type="text"
-                                    className="p-1 border rounded"
-                                    value={category}
-                                    onChange={(e) => setCategory(e.target.value)}
-                                    placeholder={`New category`}
-                                />
-                            </div>
+        <DropdownMenu>
+            <DropdownMenuTrigger className='w-full h-full'>
+                <Input
+                    type="text"
+                    name="category"
+                    placeholder="Category"
+                    className="p-1 border rounded w-full h-full"
+                    value={category}
+                    onChange={e => setCategory(e.target.value)}
+                />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+                <DropdownMenuItem className="mt-2">
+                    <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center space-x-2">
+                            <Input
+                                type="text"
+                                className="p-1 border rounded"
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
+                                placeholder={`New category`}
+                            />
+                        </div>
+                    </div>
+                </DropdownMenuItem>
+                {categoriesForDropdown.map((category, index) => (
+                    <DropdownMenuItem
+                        key={index}
+                        className='flex flex-row'
+                    >
+                        <div className='w-full' onClick={() => setCategory(category)}>
+                            <p>{category}</p>
                         </div>
                     </DropdownMenuItem>
-                    {categoriesForDropdown.map((category, index) => (
-                        <DropdownMenuItem
-                            key={index}
-                            className='flex flex-row'
-                        >
-                            <div className='w-full' onClick={()=> setCategory(category)}>
-                                <p>{category}</p>
-                            </div>
-                        </DropdownMenuItem>
-                    ))}
-                </DropdownMenuContent>
-            </DropdownMenu>
-        </div>
+                ))}
+            </DropdownMenuContent>
+        </DropdownMenu>
     )
 }
