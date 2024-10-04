@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import useToken from '../hooks/useToken'
 import CategoryDropdown from './CategoryDropdown';
 import { Button } from './ui/button';
@@ -13,19 +13,62 @@ import {
 } from "@/components/ui/dialog"
 import { ObjectId } from 'bson';
 
+interface Entry {
+    _id: ObjectId,
+    name: string,
+    amount: number,
+    date: Date,
+    category: string,
+    user_id: ObjectId
+}
+
 interface AddEntryProps {
     typeOfEntry: string,
     date: string,
-    fetchEntries: () => void;
-    entries: {}
 }
 
-export default function AddEntry({ typeOfEntry, date, fetchEntries, entries }: AddEntryProps) {
+export default function AddEntry({ typeOfEntry, date }: AddEntryProps) {
     const { token } = useToken()
     const [name, setName] = useState('')
     const [amount, setAmount] = useState('')
     const [category, setCategory] = useState('')
+    const [categoriesForDropdown, setCategoriesForDropdown] = useState<string[]>([])
+    const [entriesForCategoriesDropdown, setEntriesForCategoriesDropdown] = useState<Entry[]>([])
     const [error, setError] = useState('')
+
+    const fetchAllEntries = async () => {
+        console.log("Fetching entries for type:", typeOfEntry);
+        const response = await fetch(`http://localhost:9000/${typeOfEntry}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data);
+            setEntriesForCategoriesDropdown(data);
+        }
+    };
+
+    const sortCategories = () => {
+        console.log("Sorting categories for type:", typeOfEntry);
+        const categoriesSet = new Set(categoriesForDropdown);
+        entriesForCategoriesDropdown.forEach((entry) => {
+            categoriesSet.add(entry.category);
+        });
+        setCategoriesForDropdown(Array.from(categoriesSet));
+        console.log(categoriesForDropdown);
+    };
+
+    useEffect(() => {
+        fetchAllEntries();
+    }, [typeOfEntry]);
+
+    useEffect(() => {
+        sortCategories();
+    }, [entriesForCategoriesDropdown]);
 
     const handleSubmit = async () => {
         if (!name || !amount || !category) {
@@ -47,7 +90,13 @@ export default function AddEntry({ typeOfEntry, date, fetchEntries, entries }: A
             body: JSON.stringify({ name, amount, date, category })
         })
         if (response.ok) {
-            fetchEntries();
+            const data = await response.json();
+            setEntriesForCategoriesDropdown([...entriesForCategoriesDropdown, data]);
+            setCategoriesForDropdown(prevCategories => {
+                const categoriesSet = new Set(prevCategories);
+                categoriesSet.add(category);
+                return Array.from(categoriesSet);
+            });
             setName('');
             setAmount('');
             setCategory('');
@@ -86,17 +135,7 @@ export default function AddEntry({ typeOfEntry, date, fetchEntries, entries }: A
                             onChange={e => setAmount(e.target.value)}
                         />
                     </div>
-                    {/* <div className="w-1/4 mx-1">
-                        <Input
-                            type="text"
-                            name="category"
-                            placeholder="Category"
-                            className="p-1 border rounded w-full h-full"
-                            value={category}
-                            onChange={e => setCategory(e.target.value)}
-                        />
-                    </div> */}
-                    <CategoryDropdown setCategory={setCategory} category={category} typeOfEntry={typeOfEntry} />
+                    <CategoryDropdown category={category} setCategory={setCategory} categoriesForDropdown={categoriesForDropdown} />
                     <div className="w-1/4 mx-1">
                         <Button onClick={handleSubmit} className='bg-green-500 hover:bg-green-400 w-full h-full'>Add</Button>
                     </div>

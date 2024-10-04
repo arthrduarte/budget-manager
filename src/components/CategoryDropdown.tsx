@@ -1,64 +1,20 @@
-import { useEffect, useState } from 'react'
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Button } from './ui/button';
-import useToken from '@/hooks/useToken';
 import { Input } from './ui/input';
-import { ObjectId } from 'bson';
 
-interface Entry {
-    _id: ObjectId,
-    name: string,
-    amount: number,
-    date: Date,
-    category: string,
-    user_id: ObjectId
-}
 
 interface CategoryDropdownProps {
-    setCategory: (category: string) => void;
+    setCategory: (category: string) => void,
     category: string,
-    typeOfEntry: string
+    categoriesForDropdown: string[]
 }
 
-export default function CategoryDropdown({ setCategory, category, typeOfEntry }: CategoryDropdownProps) {
-    const { token } = useToken()
-    const [categories, setCategories] = useState<string[]>([])
-    const [error, setError] = useState('');
-    const [entries, setEntries] = useState<Entry[]>([])
+export default function CategoryDropdown({ setCategory, category, categoriesForDropdown }: CategoryDropdownProps) {
 
-    useEffect(() => {
-        const fetchEntries = async () => {
-            const response = await fetch(`http://localhost:9000/${typeOfEntry}/`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            if (response.ok) {
-                const data = await response.json()
-                setEntries(data)
-            }
-        }
-        fetchEntries()
-    }, [typeOfEntry])
-    
-    const sortCategories = () => {
-        const categoriesSet = new Set(categories)
-        entries.forEach((entry) => {
-            categoriesSet.add(entry.category)
-        })
-        setCategories(Array.from(categoriesSet))
-    }
-    useEffect(()=>{
-        sortCategories()
-    },[entries])
-    
     return (
         <div className="w-1/4 mx-1 h-full">
             <DropdownMenu>
@@ -86,15 +42,12 @@ export default function CategoryDropdown({ setCategory, category, typeOfEntry }:
                             </div>
                         </div>
                     </DropdownMenuItem>
-                    {error &&
-                        <DropdownMenuItem disabled>{error}</DropdownMenuItem>
-                    }
-                    {categories.map((category, index) => (
+                    {categoriesForDropdown.map((category, index) => (
                         <DropdownMenuItem
                             key={index}
                             className='flex flex-row'
                         >
-                            <div className='w-full' onClick={(e)=> setCategory(category)}>
+                            <div className='w-full' onClick={()=> setCategory(category)}>
                                 <p>{category}</p>
                             </div>
                         </DropdownMenuItem>
