@@ -16,38 +16,29 @@ import {
 import { Input } from './ui/input';
 import { ObjectId } from 'bson';
 
-interface Category {
-    _id: ObjectId;
-    name: string;
-    type: string;
-}
-
 interface EditEntryProps {
     entry: {
         _id: ObjectId,
         name: string;
         amount: number;
-        category_name: string;
+        category: string;
     },
     type: string,
-    categories: Category[]
     date: string,
-    fetchData: () => void,
+    fetchEntries: () => void,
     setEdit: (edit: string) => void,
-    fetchCategories: () => void
+    entries: {}
 }
 
-export default function EditEntry({ entry, type, categories, date, fetchData, setEdit, fetchCategories }: EditEntryProps) {
+export default function EditEntry({ entry, type, date, fetchEntries, setEdit }: EditEntryProps) {
     const { token } = useToken()
     const [name, setName] = useState(entry.name)
     const [amount, setAmount] = useState(entry.amount)
+    const [category, setCategory] = useState(entry.category)
     const [error, setError] = useState('')
 
-    const initialCategory = categories.find(cat => cat.name === entry.category_name)
-    const [category_id, setCategoryId] = useState(initialCategory ? initialCategory._id : null)
-
     const editEntry = async () => {
-        if (!name || !amount || !category_id) {
+        if (!name || !amount || !category) {
             setError('All fields are required.')
             return;
         }
@@ -63,10 +54,10 @@ export default function EditEntry({ entry, type, categories, date, fetchData, se
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ name, amount, date, category_id, expense_id: entry._id })
+            body: JSON.stringify({ name, amount, date, category, expense_id: entry._id })
         })
         if (response.ok) {
-            fetchData();
+            fetchEntries();
             setEdit('')
         }
     }
@@ -98,7 +89,7 @@ export default function EditEntry({ entry, type, categories, date, fetchData, se
                         onChange={e => setAmount(Number(e.target.value))}
                     />
                 </div>
-                <CategoryDropdown setCategoryId={setCategoryId} categories={categories} category_id={category_id} type={type} fetchCategories={fetchCategories} />
+                {/* <CategoryDropdown setCategoryId={setCategoryId} categories={categories} category_id={category_id} type={type} fetchCategories={fetchCategories} /> */}
 
                 <div className='flex flex-row justify-end w-1/4 mx-1'>
                     <div className='w-1/4 text-center my-auto'>

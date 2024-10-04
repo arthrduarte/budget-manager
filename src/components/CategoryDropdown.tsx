@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -10,82 +10,67 @@ import useToken from '@/hooks/useToken';
 import { Input } from './ui/input';
 import { ObjectId } from 'bson';
 
-interface Category {
-    _id: ObjectId;
-    name: string;
-    type: string;
+interface Entry {
+    _id: ObjectId,
+    name: string,
+    amount: number,
+    date: Date,
+    category: string,
+    user_id: ObjectId
 }
 
 interface CategoryDropdownProps {
-    setCategoryId: (_id: ObjectId) => void,
-    category_id: ObjectId | null,
-    categories: Category[],
-    type: string,
-    fetchCategories: () => void
+    setCategory: (category: string) => void;
+    category: string,
+    typeOfEntry: string
 }
 
-export default function CategoryDropdown({ setCategoryId, categories, category_id, type, fetchCategories }: CategoryDropdownProps) {
+export default function CategoryDropdown({ setCategory, category, typeOfEntry }: CategoryDropdownProps) {
     const { token } = useToken()
-    const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-        categories.find(category => category._id.equals(category_id)) || null
-    );
-    const [newCategory, setNewCategory] = useState('')
+    const [categories, setCategories] = useState<string[]>([])
     const [error, setError] = useState('');
+    const [entries, setEntries] = useState<Entry[]>([])
 
-    const handleCategorySelect = (category: Category) => {
-        console.log(category.name)
-        setSelectedCategory(category);
-        setCategoryId(category._id);
-    };
-
-    const handleCreateCategory = async () => {
-        if (newCategory.trim() === '') {
-            setError("New category can't be empty")
-            return
+    useEffect(() => {
+        const fetchEntries = async () => {
+            const response = await fetch(`http://localhost:9000/${typeOfEntry}/`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            if (response.ok) {
+                const data = await response.json()
+                setEntries(data)
+            }
         }
-
-        const response = await fetch('http://localhost:9000/category', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ name: newCategory, type }),
-        });
-
-        if (response.ok) {
-            setNewCategory('');
-            setError('')
-            fetchCategories();
-        } else {
-            console.error('Failed to create category');
-        }
-    };
-
-    const deleteCategory = async (category_id: number) => {
-        const response = await fetch('http://localhost:9000/category', {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ category_id }),
-        });
-        if (response.ok) {
-            fetchCategories();
-        } else {
-            console.error('Failed to delete category');
-        }
+        fetchEntries()
+    }, [typeOfEntry])
+    
+    const sortCategories = () => {
+        const categoriesSet = new Set(categories)
+        entries.forEach((entry) => {
+            categoriesSet.add(entry.category)
+        })
+        setCategories(Array.from(categoriesSet))
     }
-
-
+    useEffect(()=>{
+        sortCategories()
+    },[entries])
+    
     return (
         <div className="w-1/4 mx-1 h-full">
             <DropdownMenu>
                 <DropdownMenuTrigger className='w-full h-full'>
-                    <Button className='bg-white hover:bg-slate-100 text-black font-normal w-full h-full'>
-                        {selectedCategory ? selectedCategory.name : "Select Category"}
-                    </Button>
+                    <Input
+                        type="text"
+                        name="category"
+                        placeholder="Category"
+                        className="p-1 border rounded w-full h-full"
+                        value={category}
+                        onChange={e => setCategory(e.target.value)}
+                    />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuItem className="mt-2">
@@ -94,51 +79,24 @@ export default function CategoryDropdown({ setCategoryId, categories, category_i
                                 <Input
                                     type="text"
                                     className="p-1 border rounded"
-                                    value={newCategory}
-                                    onChange={(e) => setNewCategory(e.target.value)}
+                                    value={category}
+                                    onChange={(e) => setCategory(e.target.value)}
                                     placeholder={`New category`}
                                 />
-                                <Button
-                                    className="bg-green-500 text-white p-1 rounded"
-                                    onClick={handleCreateCategory}
-                                >
-                                    Create
-                                </Button>
                             </div>
                         </div>
                     </DropdownMenuItem>
                     {error &&
                         <DropdownMenuItem disabled>{error}</DropdownMenuItem>
                     }
-                    {categories.map((category) => (
+                    {categories.map((category, index) => (
                         <DropdownMenuItem
-                            key={category._id.toString()}
+                            key={index}
                             className='flex flex-row'
                         >
-                            <div className='w-full' onClick={() => handleCategorySelect(category)}>
-                                <p>{category.name}</p>
+                            <div className='w-full' onClick={(e)=> setCategory(category)}>
+                                <p>{category}</p>
                             </div>
-                            {/* <div>
-                                <AlertDialog>
-                                    <AlertDialogTrigger asChild>
-                                        <input onClick={(e) => e.stopPropagation()} type="button" value='🗑️' className='cursor-pointer' />
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent>
-                                        <AlertDialogHeader>
-                                            <AlertDialogTitle>Are you sure you want to delete?</AlertDialogTitle>
-                                            <AlertDialogDescription>
-                                                This action is permanent and will delete all entries with this category.
-                                            </AlertDialogDescription>
-                                        </AlertDialogHeader>
-                                        <AlertDialogFooter>
-                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                            <AlertDialogAction className='bg-green-500 hover:bg-green-600' onClick={() => deleteCategory(category.id)}>Continue</AlertDialogAction>
-                                        </AlertDialogFooter>
-
-                                    </AlertDialogContent>
-                                </AlertDialog>
-
-                            </div> */}
                         </DropdownMenuItem>
                     ))}
                 </DropdownMenuContent>
