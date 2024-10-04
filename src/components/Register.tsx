@@ -32,11 +32,10 @@ export default function Register({ setToken, setRegistered }: RegisterProps) {
             body: JSON.stringify({ first_name, last_name, email, password })
         })
         const data = await response.json()
-        if (data) {
-            if (data.error) {
-                return setError(data.error)
-            }
+        if (response.ok) {
             setToken(data.accessToken)
+        } else {
+            setError(data.message);
         }
     }
 
