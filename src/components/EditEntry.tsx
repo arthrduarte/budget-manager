@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import useToken from '../hooks/useToken'
 import CategoryDropdown from './CategoryDropdown';
 
@@ -14,39 +14,72 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Input } from './ui/input';
+import { ObjectId } from 'bson';
 
-interface Category {
-    id: number;
-    name: string;
-    type: string;
+interface Entry {
+    _id: ObjectId,
+    name: string,
+    amount: number,
+    date: Date,
+    category: string,
+    user_id: ObjectId
 }
 
 interface EditEntryProps {
     entry: {
-        id: number,
+        _id: ObjectId,
         name: string;
         amount: number;
-        category_name: string;
+        category: string;
     },
-    type: string,
-    categories: Category[]
+    typeOfEntry: string,
     date: string,
-    fetchData: () => void,
+    fetchEntries: () => void,
     setEdit: (edit: string) => void,
-    fetchCategories: () => void
+    entries: {}
 }
 
-export default function EditEntry({ entry, type, categories, date, fetchData, setEdit, fetchCategories }: EditEntryProps) {
+export default function EditEntry({ entry, typeOfEntry, date, fetchEntries, setEdit }: EditEntryProps) {
     const { token } = useToken()
     const [name, setName] = useState(entry.name)
     const [amount, setAmount] = useState(entry.amount)
+    const [category, setCategory] = useState('')
+    const [categoriesForDropdown, setCategoriesForDropdown] = useState<string[]>([])
+    const [entriesForCategoriesDropdown, setEntriesForCategoriesDropdown] = useState<Entry[]>([])
     const [error, setError] = useState('')
 
-    const initialCategory = categories.find(cat => cat.name === entry.category_name)
-    const [category_id, setCategoryId] = useState(initialCategory ? initialCategory.id.toString() : '')
+    const fetchAllEntries = async () => {
+        const response = await fetch(`http://localhost:9000/${typeOfEntry}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (response.ok) {
+            const data = await response.json();
+            setEntriesForCategoriesDropdown(data);
+        }
+    };
+
+    const sortCategories = () => {
+        const categoriesSet = new Set(categoriesForDropdown);
+        entriesForCategoriesDropdown.forEach((entry) => {
+            categoriesSet.add(entry.category);
+        });
+        setCategoriesForDropdown(Array.from(categoriesSet));
+    };
+
+    useEffect(() => {
+        fetchAllEntries();
+    }, [typeOfEntry]);
+
+    useEffect(() => {
+        sortCategories();
+    }, [entriesForCategoriesDropdown]);
 
     const editEntry = async () => {
-        if (!name || !amount || !category_id) {
+        if (!name || !amount || !category) {
             setError('All fields are required.')
             return;
         }
@@ -56,51 +89,48 @@ export default function EditEntry({ entry, type, categories, date, fetchData, se
             return;
         }
 
-        const response = await fetch('http://localhost:9000/' + type, {
+        const response = await fetch('http://localhost:9000/' + typeOfEntry, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ name, amount, date, category_id, expense_id: entry.id })
+            body: JSON.stringify({ name, amount, date, category, expense_id: entry._id })
         })
         if (response.ok) {
-            fetchData();
+            fetchEntries();
             setEdit('')
         }
     }
 
     return (
-        <div>
-
-            <div className='flex flex-row py-1 text-sm h-[2rem]'>
-                <Input
-                    type="hidden"
-                    name="entry_id"
-                    value={entry.id}
-                />
-                <div className="w-1/4 mx-1">
-                    <Input
+        <div className='flex flex-row my-1 p-3 w-1/2 lg:w-[30%] lg:mx-2 shadow-xl rounded-xl'>
+            <div className='flex flex-col w-1/2 justify-center'>
+                <div>
+                    <input
                         type="text"
                         name="name"
                         value={name}
-                        className="p-1 border rounded w-full h-full"
+                        className="font-semibold text-sm w-full h-full"
                         onChange={e => setName(e.target.value)}
                     />
                 </div>
-                <div className="w-1/4 mx-1">
-                    <Input
+                <div>
+                    <CategoryDropdown category={category} setCategory={setCategory} categoriesForDropdown={categoriesForDropdown} />
+                </div>
+            </div>
+            <div className='flex flex-col w-1/2 justify-center items-end'>
+                <div>
+                    <input
                         type="text"
                         name="amount"
                         value={amount}
-                        className="p-1 border rounded w-full h-full"
+                        className="font-semibold text-right w-full h-full"
                         onChange={e => setAmount(Number(e.target.value))}
                     />
                 </div>
-                <CategoryDropdown setCategoryId={setCategoryId} categories={categories} category_id={category_id} type={type} fetchCategories={fetchCategories} />
-
-                <div className='flex flex-row justify-end w-1/4 mx-1'>
-                    <div className='w-1/4 text-center my-auto'>
+                <div className='flex flex-row'>
+                    <div>
                         <AlertDialog>
                             <AlertDialogTrigger asChild>
                                 <input type="button" value='✅' className='cursor-pointer' />
@@ -119,7 +149,7 @@ export default function EditEntry({ entry, type, categories, date, fetchData, se
                             </AlertDialogContent>
                         </AlertDialog>
                     </div>
-                    <div className='w-1/4 text-center my-auto'>
+                    <div>
                         <input type="button" value='❌' onClick={() => setEdit('')} className='cursor-pointer' />
                     </div>
                 </div>

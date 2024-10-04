@@ -17,7 +17,7 @@ interface UserData {
 
 export default function Navbar() {
     const { token } = useToken()
-    const [data, setData] = useState<UserData[] | null>(null)
+    const [data, setData] = useState<UserData | null>(null)
     const [logout, setLogout] = useState(false)
 
     useEffect(() => {
@@ -29,7 +29,7 @@ export default function Navbar() {
                     'Authorization': `Bearer ${token}`
                 }
             })
-            const data: UserData[] = await response.json()
+            const data: UserData = await response.json()
             setData(data)
         }
 
@@ -50,7 +50,7 @@ export default function Navbar() {
             {token &&
                 <div>
                     <DropdownMenu>
-                        <DropdownMenuTrigger className='font-semibold'>{data && data[0].first_name} 👤</DropdownMenuTrigger>
+                        <DropdownMenuTrigger className='font-semibold'>{data && data.first_name} 👤</DropdownMenuTrigger>
                         <DropdownMenuContent>
                             <DropdownMenuLabel>My Account</DropdownMenuLabel>
                             <DropdownMenuSeparator />
