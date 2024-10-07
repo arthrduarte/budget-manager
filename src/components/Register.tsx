@@ -15,7 +15,16 @@ export default function Register({ setToken, setRegistered }: RegisterProps) {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const response = await fetch('http://localhost:9000/register', {
+
+        if (!first_name || !last_name || !email || !password) {
+            return setError('All fields are required.');
+        }
+
+        if (password.length < 8) {
+            return setError('Password must have at least 8 characters.');
+        }
+
+        const response = await fetch('https://budget-manager-backend.onrender.com/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -23,18 +32,17 @@ export default function Register({ setToken, setRegistered }: RegisterProps) {
             body: JSON.stringify({ first_name, last_name, email, password })
         })
         const data = await response.json()
-        if (data) {
-            if (data.error) {
-                return setError(data.error)
-            }
+        if (response.ok) {
             setToken(data.accessToken)
+        } else {
+            setError(data.message);
         }
     }
 
     return (
         <div className='flex flex-col items-center p-5'>
             <Navbar />
-            <h1>Register</h1>
+            <h1 className="my-5 text-2xl font-bold">Register</h1>
             <form action="post" onSubmit={handleSubmit} className="space-y-4">
                 <div>
                     <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">First Name:</label>

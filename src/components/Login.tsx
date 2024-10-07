@@ -13,7 +13,7 @@ export default function Login({ setToken, setRegistered }: LoginProps) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const response = await fetch('http://localhost:9000/login', {
+    const response = await fetch('https://budget-manager-backend.onrender.com/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -33,7 +33,7 @@ export default function Login({ setToken, setRegistered }: LoginProps) {
   return (
     <div className='flex flex-col items-center p-5'>
       <Navbar/>
-      <h1>Login</h1>
+      <h1 className='my-5 text-2xl font-bold'>Login</h1>
       <form action="post" onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email:</label>

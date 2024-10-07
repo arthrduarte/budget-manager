@@ -1,4 +1,3 @@
-import React from 'react';
 import { Bar } from 'react-chartjs-2';
 
 import {
@@ -43,10 +42,6 @@ const BarChart = ({ typeOfData, amount }: BarChartProps) => {
             legend: {
                 position: 'bottom' as const,
             },
-            // title: {
-            //     display: true,
-            //     text: 'Your Monthly Budget Chart',
-            // },
         },
         scales: {
             x: {
