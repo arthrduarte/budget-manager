@@ -42,10 +42,6 @@ const BarChart = ({ typeOfData, amount }: BarChartProps) => {
             legend: {
                 position: 'bottom' as const,
             },
-            // title: {
-            //     display: true,
-            //     text: 'Your Monthly Budget Chart',
-            // },
         },
         scales: {
             x: {
