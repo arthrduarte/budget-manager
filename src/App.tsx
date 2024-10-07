@@ -4,7 +4,6 @@ import Login from './components/Login'
 import Register from './components/Register'
 import useToken from './hooks/useToken';
 import Dashboard from './components/Dashboard';
-import Navbar from './components/Navbar';
 
 function App() {
   const { token, setToken } = useToken()

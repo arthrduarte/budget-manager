@@ -32,7 +32,6 @@ export default function Entries({ date, typeOfEntry, setAmountForChart }: Entrie
     const { token } = useToken()
     const [entries, setEntries] = useState<Entry[]>([])
     const [edit, setEdit] = useState('')
-    const [totalAmount, setTotalAmount] = useState(0)
 
     const fetchEntries = async () => {
         const response = await fetch(`https://budget-manager-backend.onrender.com/${typeOfEntry}/` + date, {
@@ -46,11 +45,8 @@ export default function Entries({ date, typeOfEntry, setAmountForChart }: Entrie
             const data: Entry[] = await response.json()
             if (data.length != 0) {
                 const total = data.map(entry => entry.amount).reduce((prev, next) => prev + next).toFixed(2)
-                setTotalAmount(Number(total))
                 setAmountForChart(Number(total))
-            } else {
-                setTotalAmount(0)
-            }
+            } 
             setEntries(data)
         }
     }
@@ -81,7 +77,7 @@ export default function Entries({ date, typeOfEntry, setAmountForChart }: Entrie
                 <AddEntry typeOfEntry={typeOfEntry} date={date} fetchEntries={fetchEntries}/>
             </div>
             <div className='flex flex-wrap'>
-                {entries.map((entry, index) => (
+                {entries.map((entry) => (
                     <>
                         {edit && edit == `${entry._id}` ? (
                             <EditEntry typeOfEntry={typeOfEntry} date={date} fetchEntries={fetchEntries} entry={entry} setEdit={setEdit} entries={entries} />
