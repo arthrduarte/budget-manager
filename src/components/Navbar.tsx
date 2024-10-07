@@ -22,7 +22,7 @@ export default function Navbar() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch('http://localhost:9000/dashboard', {
+            const response = await fetch('https://budget-manager-backend.onrender.com/dashboard', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

@@ -38,7 +38,7 @@ export default function AddEntry({ typeOfEntry, date, fetchEntries }: AddEntryPr
     const [error, setError] = useState('')
 
     const fetchAllEntries = async () => {
-        const response = await fetch(`http://localhost:9000/${typeOfEntry}`, {
+        const response = await fetch(`https://budget-manager-backend.onrender.com/${typeOfEntry}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ export default function AddEntry({ typeOfEntry, date, fetchEntries }: AddEntryPr
             return;
         }
 
-        const response = await fetch('http://localhost:9000/' + typeOfEntry, {
+        const response = await fetch('https://budget-manager-backend.onrender.com/' + typeOfEntry, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

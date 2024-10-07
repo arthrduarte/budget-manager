@@ -35,7 +35,7 @@ export default function Entries({ date, typeOfEntry, setAmountForChart }: Entrie
     const [totalAmount, setTotalAmount] = useState(0)
 
     const fetchEntries = async () => {
-        const response = await fetch(`http://localhost:9000/${typeOfEntry}/` + date, {
+        const response = await fetch(`https://budget-manager-backend.onrender.com/${typeOfEntry}/` + date, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export default function Entries({ date, typeOfEntry, setAmountForChart }: Entrie
 
     const deleteEntry = async (entry_id: ObjectId) => {
         const body = typeOfEntry === 'income' ? { income_id: entry_id } : { expense_id: entry_id };
-        const response = await fetch(`http://localhost:9000/${typeOfEntry}`, {
+        const response = await fetch(`https://budget-manager-backend.onrender.com/${typeOfEntry}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

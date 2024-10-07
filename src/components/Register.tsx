@@ -24,7 +24,7 @@ export default function Register({ setToken, setRegistered }: RegisterProps) {
             return setError('Password must have at least 8 characters.');
         }
 
-        const response = await fetch('http://localhost:9000/register', {
+        const response = await fetch('https://budget-manager-backend.onrender.com/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
